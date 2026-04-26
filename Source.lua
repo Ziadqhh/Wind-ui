@@ -546,7 +546,7 @@ do
 
             Utility:Tween(PromptHolder, {BackgroundTransparency = 0.1}, 0.35)
             task.wait(0.35)
-            Utility:Tween(PromptFrame, {BackgroundTransparency = NotificationTransparency}, 0.35)
+            Utility:Tween(PromptFrame, {BackgroundTransparency = NotificationTransparency}, 0.25)
             Utility:Tween(PromptFrame, {Size = UDim2.new(0, 300, 0, 150)}, 0.35)
             Utility:Tween(PromptFrameCorner, {CornerRadius = UDim.new(0, 12)}, 0.35)
             task.wait(0.35)
@@ -683,7 +683,7 @@ do
 
             Utility:Tween(PromptHolder, {BackgroundTransparency = 0.1}, 0.35)
             task.wait(0.35)
-            Utility:Tween(PromptFrame, {BackgroundTransparency = NotificationTransparency0}, 0.35)
+            Utility:Tween(PromptFrame, {BackgroundTransparency = NotificationTransparency}, 0.25)
             Utility:Tween(PromptFrame, {Size = UDim2.new(0, 300, 0, 150)}, 0.35)
             Utility:Tween(PromptFrameCorner, {CornerRadius = UDim.new(0, 12)}, 0.35)
             task.wait(0.35)
@@ -854,7 +854,7 @@ do
 
             Utility:Tween(PromptHolder, {BackgroundTransparency = 0.1}, 0.35)
             task.wait(0.35)
-            Utility:Tween(PromptFrame, {BackgroundTransparency = NotificationTransparency}, 0.35)
+            Utility:Tween(PromptFrame, {BackgroundTransparency = NotificationTransparency}, 0.25)
             Utility:Tween(PromptFrame, {Size = UDim2.new(0, 300, 0, 150)}, 0.35)
             Utility:Tween(PromptFrameCorner, {CornerRadius = UDim.new(0, 12)}, 0.35)
             task.wait(0.35)
@@ -1498,144 +1498,6 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                 writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
                 Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
                 ChangeThemeValue()
-            elseif type(NewTheme) == 'string' then
-                NewTheme = NewTheme:lower()
-                if NewTheme == 'custom' then
-                    Theme = Themes['Custom']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'default' then
-                    Theme = Themes['Default']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'lighter' then
-                    Theme = Themes['Lighter']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'light' then
-                    Theme = Themes['Light']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'light+' then
-                    Theme = Themes['Light+']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'discord' then
-                    Theme = Themes['Discord']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'red and black' then
-                    Theme = Themes['Red And Black']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'nordic dark' then
-                    Theme = Themes['Nordic Dark']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'nordic light' then
-                    Theme = Themes['Nordic Light']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'purple' then
-                    Theme = Themes['Purple']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'sentinel' then
-                    Theme = Themes['Sentinel']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'synapse x' then
-                    Theme = Themes['Synapse X']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'krnl' then
-                    Theme = Themes['Krnl']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'script-ware' then
-                    Theme = Themes['Script-Ware']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                elseif NewTheme == 'kiriot' then
-                    Theme = Themes['Kiriot']
-                    local NewTable = {}
-                    for Index, Value in next, Theme do
-                        NewTable[Index] = Utility:SplitColor(Value)
-                    end
-                    writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
-                    Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
-                    ChangeThemeValue()
-                end
             end
         end
     end
