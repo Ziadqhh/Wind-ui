@@ -1239,7 +1239,7 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
         Position = UDim2.new(0, 170, 0, 0),
         Parent = Main,
         BorderSizePixel = 0,
-        Size = UDim2.new(0, WindowSize.X.Offset - 171, 0, 10),
+        Size = UDim2.new(0, WindowSize.X.Offset - 170, 0, 15),
         ZIndex = 1,
         BackgroundColor3 = Theme.BackgroundColor
     }, {
@@ -1251,9 +1251,9 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
     Utility:Create('Frame', {
         Name = 'Filler2',
         Parent = Main,
-        Position = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 10),
+        Position = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 15),
         BorderSizePixel = 0,
-        Size = UDim2.new(0, WindowSize.X.Offset - 171, 0, 10),
+        Size = UDim2.new(0, WindowSize.X.Offset - 170, 0, 15),
         ZIndex = 1,
         BackgroundColor3 = Theme.BackgroundColor
     }, {
@@ -1288,9 +1288,9 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
         }),
         Utility:Create('Frame', {
             Name = 'Filler3',
-            Position = UDim2.new(0, 0, 0, WindowSize.Y.Offset - 7),
+            Position = UDim2.new(0, 0, 0, WindowSize.Y.Offset - 15),
             BorderSizePixel = 0,
-            Size = UDim2.new(0, 170, 0, 7),
+            Size = UDim2.new(0, 170, 0, 15),
             ZIndex = 1,
             BackgroundColor3 = Theme.SidebarColor
         }, {
@@ -1341,7 +1341,7 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
             Name = 'SidebarLine1',
             BackgroundColor3 = Theme.UIStrokeColor,
             BorderSizePixel = 0,
-            Position = UDim2.new(0, 170, 0, 0),
+            Position = UDim2.new(1, -1, 0, 0),
             Size = UDim2.new(0, 1, 0, WindowSize.Y.Offset)
         }),
         Utility:Create('Frame', {
@@ -1357,7 +1357,7 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
             BackgroundColor3 = Theme.SidebarColor,
             BorderSizePixel = 0,
             Position = UDim2.new(0, 0, 0, 55),
-            Size = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 62),
+            Size = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 70),
             ScrollBarThickness = 0
         }, {
             Utility:Create('UIListLayout', {
@@ -1373,11 +1373,16 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
         BackgroundColor3 = Theme.BackgroundColor,
         Parent = Main,
         BorderSizePixel = 0,
-        Position = UDim2.new(0, 171, 0, 10),
-        Size = UDim2.new(0, WindowSize.X.Offset - 171, 0, WindowSize.Y.Offset - 20)
+        Position = UDim2.new(0, 170, 0, 0),
+        Size = UDim2.new(0, WindowSize.X.Offset - 170, 1, 0)
     }, {
         Utility:Create('Folder', {
             Name = 'TabsFolder'
+        }),
+        Utility:Create('UIPadding', {
+            PaddingTop = UDim.new(0, 10),
+            PaddingBottom = UDim.new(0, 10),
+            PaddingLeft = UDim.new(0, 5)
         })
     })
 
@@ -1387,11 +1392,11 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
         Utility:Tween(Main.PromptHolder, {Size = WindowSize}, 0.35)
         Utility:Tween(Main.Sidebar, {Size = UDim2.new(0, 170, 0, WindowSize.Y.Offset)}, 0.35)
         Utility:Tween(Main.Sidebar.SidebarLine1, {Size = UDim2.new(0, 1, 0, WindowSize.Y.Offset)}, 0.35)
-        Utility:Tween(Main.Sidebar.TabButtonHolder, {Size = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 62)}, 0.35)
-        Utility:Tween(Main.Sidebar.Filler3, {Position = UDim2.new(0, 0, 0, WindowSize.Y.Offset - 7)}, 0.35)
-        Utility:Tween(Main.Filler1, {Size = UDim2.new(0, WindowSize.X.Offset - 171, 0, 10)}, 0.35)
-        Utility:Tween(Main.Filler2, {Position = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 10), Size = UDim2.new(0, WindowSize.X.Offset - 171, 0, 10)}, 0.35)
-        Utility:Tween(Main.TabContainer, {Size = UDim2.new(0, WindowSize.X.Offset - 171, 0, WindowSize.Y.Offset - 20)}, 0.35)
+        Utility:Tween(Main.Sidebar.TabButtonHolder, {Size = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 70)}, 0.35)
+        Utility:Tween(Main.Sidebar.Filler3, {Position = UDim2.new(0, 0, 0, WindowSize.Y.Offset - 15)}, 0.35)
+        Utility:Tween(Main.Filler1, {Size = UDim2.new(0, WindowSize.X.Offset - 170, 0, 15)}, 0.35)
+        Utility:Tween(Main.Filler2, {Position = UDim2.new(0, 170, 0, WindowSize.Y.Offset - 15), Size = UDim2.new(0, WindowSize.X.Offset - 170, 0, 15)}, 0.35)
+        Utility:Tween(Main.TabContainer, {Size = UDim2.new(0, WindowSize.X.Offset - 170, 1, 0)}, 0.35)
     end
 
     local HubNameObj = Container.Main.Sidebar.HubNameText
@@ -1491,6 +1496,47 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
         if not ImprovePerformance then
             if type(NewTheme) == 'table' then
                 Theme = NewTheme
+                local NewTable = {}
+                for Index, Value in next, Theme do
+                    NewTable[Index] = Utility:SplitColor(Value)
+                end
+                writefile('VisualUILibraryCurrentTheme.json', HttpService:JSONEncode(NewTable))
+                Config['Theme_4z3s4QrUhfqt703FmiAe'] = HttpService:JSONEncode(NewTable)
+                ChangeThemeValue()
+            elseif type(NewTheme) == 'string' then
+                NewTheme = NewTheme:lower()
+                if NewTheme == 'custom' then
+                    Theme = Themes['Custom']
+                elseif NewTheme == 'default' then
+                    Theme = Themes['Default']
+                elseif NewTheme == 'lighter' then
+                    Theme = Themes['Lighter']
+                elseif NewTheme == 'light' then
+                    Theme = Themes['Light']
+                elseif NewTheme == 'light+' then
+                    Theme = Themes['Light+']
+                elseif NewTheme == 'discord' then
+                    Theme = Themes['Discord']
+                elseif NewTheme == 'red and black' then
+                    Theme = Themes['Red And Black']
+                elseif NewTheme == 'nordic dark' then
+                    Theme = Themes['Nordic Dark']
+                elseif NewTheme == 'nordic light' then
+                    Theme = Themes['Nordic Light']
+                elseif NewTheme == 'purple' then
+                    Theme = Themes['Purple']
+                elseif NewTheme == 'sentinel' then
+                    Theme = Themes['Sentinel']
+                elseif NewTheme == 'synapse x' then
+                    Theme = Themes['Synapse X']
+                elseif NewTheme == 'krnl' then
+                    Theme = Themes['Krnl']
+                elseif NewTheme == 'script-ware' then
+                    Theme = Themes['Script-Ware']
+                elseif NewTheme == 'kiriot' then
+                    Theme = Themes['Kiriot']
+                end
+                
                 local NewTable = {}
                 for Index, Value in next, Theme do
                     NewTable[Index] = Utility:SplitColor(Value)
@@ -3199,9 +3245,11 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                 local DefaultColor = DefaultColor or Color3.fromRGB(0, 125, 255)
                 local Debounce = false
                 local Opened = false
-                local H, S, V = Color3.toHSV(DefaultColor)
+                local ColorH, ColorS, ColorV = Color3.toHSV(DefaultColor)
                 local ColorpickerFunctions = {}
                 local Hovering = false
+                local DraggingRGB = false
+                local DraggingDarkness = false
 
                 Utility:Create('Frame', {
                     Name = Name..'ColorpickerHolder',
@@ -3258,7 +3306,8 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                         BackgroundColor3 = Theme.PrimaryElementColor,
                         BorderSizePixel = 0,
                         Position = UDim2.new(0, 0, 0, 40),
-                        Size = UDim2.new(0, 440, 0, 114),
+                        Size = UDim2.new(0, 440, 0, 0),
+                        ClipsDescendants = true,
                         Visible = false
                     }, {
                         Utility:Create('UICorner', {
@@ -3287,7 +3336,7 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                                 Name = Name..'RGBPickerCircle',
                                 BackgroundColor3 = Color3.fromRGB(0, 0, 0),
                                 BackgroundTransparency = 1,
-                                Position = UDim2.new(0, 293, 0, -7),
+                                Position = UDim2.new(ColorH, -7, 0, -7),
                                 Size = UDim2.new(0, 14, 0, 14),
                                 Image = 'rbxassetid://3926309567',
                                 ImageColor3 = Color3.fromRGB(0, 0, 0),
@@ -3318,7 +3367,7 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                                 BackgroundColor3 = Color3.fromRGB(0, 0, 0),
                                 BackgroundTransparency = 1,
                                 AnchorPoint = Vector2.new(0.5, 0),
-                                Position = UDim2.new(0.5, 0, 0, -6),
+                                Position = UDim2.new(0.5, 0, 1 - ColorV, -6),
                                 Size = UDim2.new(0, 14, 0, 14),
                                 Image = 'rbxassetid://3926309567',
                                 ImageColor3 = Color3.fromRGB(0, 0, 0),
@@ -3365,93 +3414,81 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                 
                 UpdateSectionSize()
 
-                if not Args[1] == true then
-                    Config[Name] = Utility:SplitColor(DefaultColor)
+                local function UpdateColor()
+                    local NewColor = Color3.fromHSV(ColorH, ColorS, ColorV)
+                    ColorpickerPreview.BackgroundColor3 = NewColor
+                    Callback(NewColor)
                 end
 
-                if not ImprovePerformance then
-                    task.spawn(function()
-                        while task.wait() do
-                            if ChangeTheme then
-                                if not BreakAllLoops then
-                                    if not Hovering then
-                                        Utility:Tween(ColorpickerHolder, {BackgroundColor3 = Theme.PrimaryElementColor}, 0.35)
-                                    end
-                                    Utility:Tween(ColorpickerHolder[Name..'ColorpickerHolderStroke'], {Color = Theme.UIStrokeColor}, 0.35)
-                                    Utility:Tween(ColorpickerHolder[Name..'ColorpickerText'], {BackgroundColor3 = Theme.PrimaryElementColor}, 0.35)
-                                    Utility:Tween(ColorpickerHolder[Name..'ColorpickerText'], {TextColor3 = Theme.PrimaryTextColor}, 0.35)
-                                    Utility:Tween(ColorpickerButton, {BackgroundColor3 = Theme.PrimaryElementColor}, 0.35)
-                                    Utility:Tween(ColorpickerButton, {TextColor3 = Theme.SecondaryTextColor}, 0.35)
-                                    Utility:Tween(ColorpickerDropdown, {BackgroundColor3 = Theme.PrimaryElementColor}, 0.35)
-                                    Utility:Tween(ColorpickerDropdown[Name..'ColorpickerDropdownStroke'], {Color = Theme.UIStrokeColor}, 0.35)
-                                    Utility:Tween(RGBPicker, {BackgroundColor3 = Theme.PrimaryElementColor}, 0.35)
-                                    Utility:Tween(RGBPicker[Name..'RGBPickerStroke'], {Color = Theme.UIStrokeColor}, 0.35)
-                                    Utility:Tween(DarknessPicker, {BackgroundColor3 = Theme.PrimaryElementColor}, 0.35)
-                                    Utility:Tween(DarknessPicker[Name..'DarknessPickerStroke'], {Color = Theme.UIStrokeColor}, 0.35)
-                                else
-                                    break
-                                end
-                            end
-                        end
-                    end)
-                end
+                RGBPicker.InputBegan:Connect(function(Input)
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+                        DraggingRGB = true
+                    end
+                end)
 
-                if DefaultColor ~= nil then
-                    Color = {H, S, V}
-                    local FinalColor = Color3.fromHSV(Color[1], Color[2], Color[3])
-                    ColorpickerPreview.BackgroundColor3 = FinalColor
-                    Callback(FinalColor)
-                end
+                DarknessPicker.InputBegan:Connect(function(Input)
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+                        DraggingDarkness = true
+                    end
+                end)
+
+                UserInputService.InputEnded:Connect(function(Input)
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+                        DraggingRGB = false
+                        DraggingDarkness = false
+                    end
+                end)
+
+                UserInputService.InputChanged:Connect(function(Input)
+                    if DraggingRGB and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+                        local X = math.clamp((Input.Position.X - RGBPicker.AbsolutePosition.X) / RGBPicker.AbsoluteSize.X, 0, 1)
+                        ColorH = 1 - X
+                        RGBPickerCircle.Position = UDim2.new(X, -7, 0, -7)
+                        UpdateColor()
+                    elseif DraggingDarkness and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+                        local Y = math.clamp((Input.Position.Y - DarknessPicker.AbsolutePosition.Y) / DarknessPicker.AbsoluteSize.Y, 0, 1)
+                        ColorV = 1 - Y
+                        DarknessPickerCircle.Position = UDim2.new(0.5, 0, Y, -6)
+                        UpdateColor()
+                    end
+                end)
 
                 ColorpickerButton.MouseButton1Click:Connect(function()
                     if not Debounce then
+                        Debounce = true
+                        Opened = not Opened
                         if Opened then
-                            Opened = false
-                            Utility:Tween(ColorpickerFiller, {Size = UDim2.new(0, 440, 0, 0)}, 0.35)
-                            Utility:Tween(RGBPicker, {Size = UDim2.new(0, 300, 0, 0)}, 0.35)
-                            Utility:Tween(DarknessPicker, {Size = UDim2.new(0, 25, 0, 0)}, 0.35)
-                            Utility:Tween(ColorpickerDropdown, {Size = UDim2.new(0, 440, 0, 0)}, 0.35)
-                            Utility:Tween(Tab, {CanvasSize = Tab.CanvasSize - UDim2.new(0, 0, 0, 114)}, 0.35)
-                            Utility:Tween(Section, {Size = Section.Size - UDim2.new(0, 0, 0, 114)}, 0.35)
-                            UpdateSectionSize()
-                            Debounce = true
-                            task.wait(DebounceAmount)
-                            Debounce = false
-                            ColorpickerDropdown.Visible = false
-                            ColorpickerFiller.Visible = false
-                        else
-                            Opened = true
                             ColorpickerFiller.Visible = true
                             ColorpickerDropdown.Visible = true
                             Utility:Tween(Tab, {CanvasSize = Tab.CanvasSize + UDim2.new(0, 0, 0, 114)}, 0.35)
                             Utility:Tween(Section, {Size = Section.Size + UDim2.new(0, 0, 0, 114)}, 0.35)
                             Utility:Tween(ColorpickerDropdown, {Size = UDim2.new(0, 440, 0, 114)}, 0.35)
-                            Utility:Tween(RGBPicker, {Size = UDim2.new(0, 300, 0, 100)}, 0.35)
-                            Utility:Tween(DarknessPicker, {Size = UDim2.new(0, 25, 0, 100)}, 0.35)
                             Utility:Tween(ColorpickerFiller, {Size = UDim2.new(0, 440, 0, 110)}, 0.35)
-                            UpdateSectionSize()
-                            Debounce = true
-                            task.wait(DebounceAmount)
-                            Debounce = false
+                        else
+                            Utility:Tween(ColorpickerFiller, {Size = UDim2.new(0, 440, 0, 0)}, 0.35)
+                            Utility:Tween(ColorpickerDropdown, {Size = UDim2.new(0, 440, 0, 0)}, 0.35)
+                            Utility:Tween(Tab, {CanvasSize = Tab.CanvasSize - UDim2.new(0, 0, 0, 114)}, 0.35)
+                            Utility:Tween(Section, {Size = Section.Size - UDim2.new(0, 0, 0, 114)}, 0.35)
+                            task.wait(0.35)
+                            ColorpickerDropdown.Visible = false
+                            ColorpickerFiller.Visible = false
                         end
+                        UpdateSectionSize()
+                        task.wait(DebounceAmount)
+                        Debounce = false
                     end
                 end)
 
-                ColorpickerHolder.MouseEnter:Connect(function()
-                    Hovering = true
-                    Utility:Tween(ColorpickerHolder, {BackgroundColor3 = Utility:Lighten(Theme.PrimaryElementColor)}, 0.5)
-                end)
-
-                ColorpickerHolder.MouseLeave:Connect(function()
-                    Utility:Tween(ColorpickerHolder, {BackgroundColor3 = Theme.PrimaryElementColor}, 0.5)
-                    Hovering = false
-                end)
-
-                local Mouse = Players.LocalPlayer:GetMouse()
-                local Color = {1, 1, 1}
-                local RGBPicked = false
-                local DarknessPicked = false
-
+                function ColorpickerFunctions:Set(Value)
+                    ColorH, ColorS, ColorV = Color3.toHSV(Value)
+                    ColorpickerPreview.BackgroundColor3 = Value
+                    RGBPickerCircle.Position = UDim2.new(1 - ColorH, -7, 0, -7)
+                    DarknessPickerCircle.Position = UDim2.new(0.5, 0, 1 - ColorV, -6)
+                    Callback(Value)
+                end
+                ConfigUpdates[Name] = ColorpickerFunctions
+                return ColorpickerFunctions
+            end
                 -- // Based off xHeptc's functions | https://v3rmillion.net/member.php?action=profile&uid=1347047
                     
                 Mouse.Move:Connect(function()
