@@ -2363,9 +2363,6 @@ function Library:CreateWindow(HubName, GameName, IntroText, IntroIcon, ImprovePe
                 ConfigUpdates[Name] = SliderFunctions
                 return SliderFunctions
             end
-                ConfigUpdates[Name] = SliderFunctions
-                return SliderFunctions
-            end
 
             function Elements:CreateTextbox(Name, Placeholder, Callback)
                 local Name = Name or 'Textbox'
