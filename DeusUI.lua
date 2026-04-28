@@ -307,51 +307,23 @@ end
 function DeusUI:CreateWindow(config)
     local theme = self.Themes[self.CurrentTheme]; local ScreenGui = self:Create("ScreenGui", { Name = "DeusDiscordUI", Parent = (gethui and gethui()) or CoreGui, ResetOnSpawn = false }); self.ScreenGui = ScreenGui; self.Elements = {}
     local WindowSize = UDim2.new(0, 520, 0, 380); local MainFrame = self:Create("CanvasGroup", { Name = "MainFrame", Parent = ScreenGui, BackgroundColor3 = theme.Main, Position = UDim2.new(0.5, -260, 0.5, -190), Size = WindowSize, ClipsDescendants = true, ZIndex = 1, GroupTransparency = 0 }, { self:Create("UICorner", {CornerRadius = UDim.new(0, 12)}), self:Create("UIStroke", {Color = theme.Outline, Transparency = 0.3, Thickness = 1.2}), self:Create("UIScale", {Scale = 1}) }); self.MainFrame = MainFrame; self.UIScale = MainFrame.UIScale; table.insert(self.Elements, {Instance = MainFrame, Type = "MainFrame"})
-    local Sidebar = self:Create("Frame", { Name = "Sidebar", Parent = MainFrame, Size = UDim2.new(0, 160, 1, 0), BackgroundColor3 = theme.Secondary, ZIndex = 2 }, { 
+    local Sidebar = self:Create("Frame", { Name = "Sidebar", Parent = MainFrame, Size = UDim2.new(0, 150, 1, 0), BackgroundColor3 = theme.Secondary, ZIndex = 2 }, { 
         self:Create("UICorner", {CornerRadius = UDim.new(0, 12)}), 
         self:Create("Frame", {
             Name = "Header", 
-            Size = UDim2.new(1, 0, 0, 52), 
+            Size = UDim2.new(1, 0, 0, 48), 
             BackgroundTransparency = 1, 
             ZIndex = 3
         }, { 
-            self:Create("UIListLayout", {FillDirection = "Vertical", VerticalAlignment = "Top", Padding = UDim.new(0, 8)}),
-            self:Create("Frame", {Name = "LogoArea", Size = UDim2.new(1, 0, 0, 32), BackgroundTransparency = 1, ZIndex = 4}, {
-                self:Create("ImageLabel", { Name = "Logo", Size = UDim2.new(0, 24, 0, 24), Position = UDim2.new(0, 8, 0.5, 0), AnchorPoint = Vector2.new(0, 0.5), BackgroundTransparency = 1, Image = self:GetIcon("hexagon"), ImageColor3 = theme.Accent, ZIndex = 5 }),
-                self:Create("TextLabel", {Text = config.Title or "DEUS", Size = UDim2.new(1, -42, 1, 0), Position = UDim2.new(0, 40, 0, 0), BackgroundTransparency = 1, TextColor3 = theme.Text, TextSize = 13, Font = Enum.Font.GothamBold, TextXAlignment = "Left", ZIndex = 5})
-            }),
-            self:Create("Frame", {
-                Name = "SearchBox", 
-                Size = UDim2.new(1, -16, 0, 28), 
-                BackgroundColor3 = theme.ChannelBG, 
-                Position = UDim2.new(0.5, 0, 0, 0), 
-                AnchorPoint = Vector2.new(0.5, 0),
-                ZIndex = 4
-            }, { 
-                self:Create("UICorner", {CornerRadius = UDim.new(0, 6)}),
-                self:Create("UIStroke", {Color = theme.Outline, Transparency = 0.8, Thickness = 1}),
-                self:Create("ImageLabel", { Name = "SearchIcon", Size = UDim2.new(0, 14, 0, 14), Position = UDim2.new(0, 6, 0.5, 0), AnchorPoint = Vector2.new(0, 0.5), BackgroundTransparency = 1, Image = self:GetIcon("search"), ImageColor3 = theme.TextSecondary, ZIndex = 5 }),
-                self:Create("TextBox", { 
-                    Name = "SearchInput", 
-                    Size = UDim2.new(1, -30, 1, 0), 
-                    Position = UDim2.new(0, 26, 0, 0), 
-                    BackgroundTransparency = 1, 
-                    Text = "", 
-                    PlaceholderText = "Search tabs...", 
-                    TextColor3 = theme.TextSecondary, 
-                    TextSize = 10, 
-                    Font = Enum.Font.Gotham, 
-                    TextXAlignment = "Left", 
-                    ZIndex = 5 
-                })
-            })
+            self:Create("ImageLabel", { Name = "Logo", Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(0, 10, 0.5, 0), AnchorPoint = Vector2.new(0, 0.5), BackgroundTransparency = 1, Image = self:GetIcon("hexagon"), ImageColor3 = theme.Accent, ZIndex = 5 }),
+            self:Create("TextLabel", {Text = config.Title or "DEUS", Size = UDim2.new(1, -46, 1, 0), Position = UDim2.new(0, 44, 0, 0), BackgroundTransparency = 1, TextColor3 = theme.Text, TextSize = 14, Font = Enum.Font.GothamBold, TextXAlignment = "Left", ZIndex = 5})
         })
     }); table.insert(self.Elements, {Instance = Sidebar, Type = "Sidebar"})
     local TabContainer = self:Create("ScrollingFrame", { 
         Name = "TabScroll", 
         Parent = Sidebar, 
-        Size = UDim2.new(1, 0, 1, -52), 
-        Position = UDim2.new(0, 0, 0, 52), 
+        Size = UDim2.new(1, 0, 1, -48), 
+        Position = UDim2.new(0, 0, 0, 48), 
         BackgroundTransparency = 1, 
         ScrollBarThickness = 0, 
         AutomaticCanvasSize = Enum.AutomaticSize.Y, 
@@ -361,15 +333,16 @@ function DeusUI:CreateWindow(config)
         self:Create("UIListLayout", {Padding = UDim.new(0, 4), HorizontalAlignment = "Center", SortOrder = Enum.SortOrder.LayoutOrder}), 
         self:Create("UIPadding", {PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8), PaddingTop = UDim.new(0, 4)}) 
     }); 
-    local PageContainer = self:Create("Frame", { Name = "PageContainer", Parent = MainFrame, Size = UDim2.new(1, -160, 1, -42), Position = UDim2.new(0, 160, 0, 42), BackgroundTransparency = 1, ZIndex = 2 }); 
-    local Topbar = self:Create("Frame", { Name = "Topbar", Parent = MainFrame, Size = UDim2.new(1, -160, 0, 42), Position = UDim2.new(0, 160, 0, 0), BackgroundTransparency = 1, ZIndex = 3 }, { 
-        self:Create("Frame", {Size = UDim2.new(0.95, 0, 0, 1), Position = UDim2.new(0.025, 0, 1, 0), BackgroundColor3 = theme.Outline, BackgroundTransparency = 0.4, ZIndex = 4}), 
-        self:Create("TextLabel", {Name = "TabTitle", Text = "Home", Size = UDim2.new(1, -80, 1, 0), Position = UDim2.new(0, 18, 0, 0), BackgroundTransparency = 1, TextColor3 = theme.Text, TextSize = 13, Font = Enum.Font.GothamBold, TextXAlignment = "Left", ZIndex = 4}) 
+    local PageContainer = self:Create("Frame", { Name = "PageContainer", Parent = MainFrame, Size = UDim2.new(1, -160, 1, -54), Position = UDim2.new(0, 160, 0, 52), BackgroundTransparency = 1, ZIndex = 2, ClipsDescendants = true }); 
+    local Topbar = self:Create("Frame", { Name = "Topbar", Parent = MainFrame, Size = UDim2.new(1, -160, 0, 36), Position = UDim2.new(0, 160, 0, 0), BackgroundColor3 = theme.Main, BackgroundTransparency = 0.5, ZIndex = 3 }, { 
+        self:Create("UICorner", {CornerRadius = UDim.new(0, 0)}),
+        self:Create("Frame", {Size = UDim2.new(1, 0, 0, 1), Position = UDim2.new(0, 0, 1, 0), BackgroundColor3 = theme.Outline, BackgroundTransparency = 0.6, ZIndex = 4}), 
+        self:Create("TextLabel", {Name = "TabTitle", Text = "Home", Size = UDim2.new(1, -100, 1, 0), Position = UDim2.new(0, 12, 0, 0), BackgroundTransparency = 1, TextColor3 = theme.Text, TextSize = 12, Font = Enum.Font.GothamBold, TextXAlignment = "Left", ZIndex = 4})
     }); table.insert(self.Elements, {Instance = Topbar, Type = "Topbar"})
     local function CreateControlButton(name, text, color) local btn = self:Create("TextButton", { Name = name, Size = UDim2.new(0, 22, 0, 22), BackgroundTransparency = 1, Text = text, TextColor3 = theme.TextSecondary, TextSize = (text == "×") and 18 or 14, Font = Enum.Font.GothamBold, ZIndex = 101, AutoButtonColor = false }, { self:Create("UICorner", {CornerRadius = UDim.new(0, 4)}) }); btn.MouseEnter:Connect(function() self:Tween(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.8, BackgroundColor3 = color or Color3.fromRGB(200, 200, 200), TextColor3 = Color3.new(1,1,1)}) end); btn.MouseLeave:Connect(function() self:Tween(btn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = self.Themes[self.CurrentTheme].TextSecondary}) end); return btn end
     local MinBtn = CreateControlButton("Min", "—"); local CloseBtn = CreateControlButton("Close", "×", Color3.fromRGB(255, 60, 60)); local Controls = self:Create("Frame", { Name = "Controls", Parent = Topbar, Size = UDim2.new(0, 65, 1, 0), Position = UDim2.new(1, -5, 0, 0), AnchorPoint = Vector2.new(1, 0), BackgroundTransparency = 1, ZIndex = 100 }, { self:Create("UIListLayout", { FillDirection = "Horizontal", Padding = UDim.new(0, 5), VerticalAlignment = "Center", HorizontalAlignment = "Right" }) }); MinBtn.Parent = Controls; CloseBtn.Parent = Controls; MinBtn.MouseButton1Click:Connect(function() 
         local isMin = MainFrame.Size.Y.Offset < 100
-        self:Tween(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = isMin and WindowSize or UDim2.new(0, 520, 0, 52)})
+        self:Tween(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = isMin and WindowSize or UDim2.new(0, 500, 0, 48)})
         Sidebar.Visible = isMin
         PageContainer.Visible = isMin
     end); CloseBtn.MouseButton1Click:Connect(function() self:Tween(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {GroupTransparency = 1}); self:Tween(self.UIScale, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Scale = 0.7}); task.delay(0.45, function() ScreenGui:Destroy() end) end)
@@ -387,15 +360,44 @@ function DeusUI:CreateWindow(config)
     end
     function WindowMethods:Tab(tabConfig)
         OrderTracker = OrderTracker + 1; local Page = DeusUI:Create("ScrollingFrame", { Parent = PageContainer, Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Visible = false, ScrollBarThickness = 2, ScrollBarImageColor3 = theme.Outline, AutomaticCanvasSize = Enum.AutomaticSize.Y, CanvasSize = UDim2.new(0,0,0,0), ZIndex = 3 }, { DeusUI:Create("UIListLayout", {Padding = UDim.new(0, 8), HorizontalAlignment = "Center"}), DeusUI:Create("UIPadding", {PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10), PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10)}) }); local tabTitle = tabConfig.Title or "Tab"; local tabIcon = DeusUI:GetIcon(tabConfig.Icon)
-        local TabBtn = DeusUI:Create("TextButton", { Parent = TabContainer, Size = UDim2.new(1, 0, 0, 36), BackgroundTransparency = 1, Text = "", AutoButtonColor = false, ZIndex = 4, LayoutOrder = OrderTracker }, { 
-            DeusUI:Create("UICorner", {CornerRadius = UDim.new(0, 8)}), 
-            DeusUI:Create("Frame", { Name = "Indicator", Size = UDim2.new(0, 3, 0, 0), Position = UDim2.new(0, 0, 0.5, 0), AnchorPoint = Vector2.new(0, 0.5), BackgroundColor3 = theme.Accent, BackgroundTransparency = 1, ZIndex = 5 }, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) }), 
-            DeusUI:Create("Frame", { Name = "Content", Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, ZIndex = 5 }, { 
-                DeusUI:Create("UIListLayout", { FillDirection = "Horizontal", VerticalAlignment = "Center", Padding = UDim.new(0, 10), HorizontalAlignment = "Left" }), 
-                DeusUI:Create("UIPadding", {PaddingLeft = UDim.new(0, 12)}), 
-                tabIcon and DeusUI:Create("ImageLabel", { Name = "Icon", Size = UDim2.new(0, 18, 0, 18), BackgroundTransparency = 1, Image = tabIcon, ImageColor3 = theme.TextSecondary, ZIndex = 6 }) or nil, 
-                DeusUI:Create("TextLabel", { Name = "Label", Text = tabTitle, Size = UDim2.new(0, 0, 1, 0), AutomaticSize = "X", BackgroundTransparency = 1, TextColor3 = theme.TextSecondary, TextSize = 12, Font = Enum.Font.GothamMedium, ZIndex = 6 }) 
+        local TabBtn = DeusUI:Create("TextButton", { Parent = TabContainer, Size = UDim2.new(1, 0, 0, 34), BackgroundTransparency = 1, Text = "", AutoButtonColor = false, ZIndex = 4, LayoutOrder = OrderTracker }, { 
+            DeusUI:Create("UICorner", {CornerRadius = UDim.new(0, 6)}), 
+            DeusUI:Create("Frame", { 
+                Name = "Indicator", 
+                Size = UDim2.new(0, 3, 0, 0), 
+                Position = UDim2.new(0, -4, 0.5, 0), 
+                AnchorPoint = Vector2.new(0, 0.5), 
+                BackgroundColor3 = theme.Accent, 
+                BackgroundTransparency = 1, 
+                ZIndex = 5 
+            }, { 
+                DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) 
+            }), 
+            DeusUI:Create("Frame", { 
+                Name = "Content", 
+                Size = UDim2.new(1, 0, 1, 0), 
+                BackgroundTransparency = 1, 
+                ZIndex = 5 
+            }, { 
+                DeusUI:Create("UIListLayout", { FillDirection = "Horizontal", VerticalAlignment = "Center", Padding = UDim.new(0, 8), HorizontalAlignment = "Left" }), 
+                DeusUI:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)}), 
+                tabIcon and DeusUI:Create("ImageLabel", { Name = "Icon", Size = UDim2.new(0, 16, 0, 16), BackgroundTransparency = 1, Image = tabIcon, ImageColor3 = theme.TextSecondary, ZIndex = 6 }) or nil, 
+                DeusUI:Create("TextLabel", { Name = "Label", Text = tabTitle, Size = UDim2.new(0, 0, 1, 0), AutomaticSize = "X", BackgroundTransparency = 1, TextColor3 = theme.TextSecondary, TextSize = 11, Font = Enum.Font.GothamMedium, ZIndex = 6 }) 
             }) 
+        }) 
+            }), 
+            self:Create("Frame", { 
+                Name = "Content", 
+                Size = UDim2.new(1, 0, 1, 0), 
+                BackgroundTransparency = 1, 
+                ZIndex = 5 
+            }, { 
+                self:Create("UIListLayout", { FillDirection = "Horizontal", VerticalAlignment = "Center", Padding = UDim.new(0, 8), HorizontalAlignment = "Left" }), 
+                self:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)}), 
+                tabIcon and self:Create("ImageLabel", { Name = "Icon", Size = UDim2.new(0, 16, 0, 16), BackgroundTransparency = 1, Image = tabIcon, ImageColor3 = theme.TextSecondary, ZIndex = 6 }) or nil, 
+                self:Create("TextLabel", { Name = "Label", Text = tabTitle, Size = UDim2.new(0, 0, 1, 0), AutomaticSize = "X", BackgroundTransparency = 1, TextColor3 = theme.TextSecondary, TextSize = 11, Font = Enum.Font.GothamMedium, ZIndex = 6 }) 
+            }) 
+        })
         })
         local tabData = {Type = "TabBtn", Instance = TabBtn, Selected = false}; table.insert(DeusUI.Elements, tabData)
         local function SetTabState(state) 
