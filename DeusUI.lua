@@ -36,7 +36,14 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local Camera = workspace.CurrentCamera
+
+local Camera = nil
+
+task.defer(function()
+    pcall(function()
+        Camera = workspace.CurrentCamera
+    end)
+end)
 
 -- // --- INTERNAL UTILITIES --- // --
 local function FetchIcons()
@@ -62,10 +69,13 @@ function DeusUI:Create(className, properties, children)
 end
 
 function DeusUI:GetIcon(name)
-    if not name or name == "" then return nil end
+    if not name or name == "" then return "rbxassetid://10734950309" end
     if name:find("rbxassetid://") then return name end
     FetchIcons()
-    return DeusUI.Icons[name] or "rbxassetid://10734950309"
+    if type(DeusUI.Icons) == "table" and DeusUI.Icons[name] then
+        return DeusUI.Icons[name]
+    end
+    return "rbxassetid://10734950309"
 end
 
 function DeusUI:Tween(instance, info, propertyTable)
@@ -237,10 +247,11 @@ local function CreateESP(plr)
         end
         local char = plr.Character; local hrp = char and char:FindFirstChild("HumanoidRootPart"); local hum = char and char:FindFirstChild("Humanoid")
         if char and hrp and hum and hum.Health > 0 then
-            local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+            local cam = workspace.CurrentCamera
+            local pos, onScreen = cam:WorldToViewportPoint(hrp.Position)
             if onScreen and DeusUI.ESP.CornerBoxes then
-                local size = (Camera.CFrame.Position - hrp.Position).Magnitude; local offset = math.clamp(1/size * 750, 2, 30); local sX, sY = 2.5, 4.5
-                local TL = Camera:WorldToViewportPoint((hrp.CFrame * CFrame.new(sX, sY, 0)).p); local TR = Camera:WorldToViewportPoint((hrp.CFrame * CFrame.new(-sX, sY, 0)).p); local BL = Camera:WorldToViewportPoint((hrp.CFrame * CFrame.new(sX, -sY, 0)).p); local BR = Camera:WorldToViewportPoint((hrp.CFrame * CFrame.new(-sX, -sY, 0)).p)
+                local size = (cam.CFrame.Position - hrp.Position).Magnitude; local offset = math.clamp(1/size * 750, 2, 30); local sX, sY = 2.5, 4.5
+                local TL = cam:WorldToViewportPoint((hrp.CFrame * CFrame.new(sX, sY, 0)).p); local TR = cam:WorldToViewportPoint((hrp.CFrame * CFrame.new(-sX, sY, 0)).p); local BL = cam:WorldToViewportPoint((hrp.CFrame * CFrame.new(sX, -sY, 0)).p); local BR = cam:WorldToViewportPoint((hrp.CFrame * CFrame.new(-sX, -sY, 0)).p)
                 for _, line in pairs(Objects.Lines) do line.Color = DeusUI.ESP.Color; line.Visible = true end
                 Objects.Lines[1].From = Vector2.new(TL.X, TL.Y); Objects.Lines[1].To = Vector2.new(TL.X + offset, TL.Y)
                 Objects.Lines[2].From = Vector2.new(TL.X, TL.Y); Objects.Lines[2].To = Vector2.new(TL.X, TL.Y + offset)
