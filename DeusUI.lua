@@ -1033,3 +1033,5 @@ function DeusUI:CreateWindow(config)
 end
 
 return DeusUI
+
+return DeusUI
