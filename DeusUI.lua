@@ -8,6 +8,7 @@
 ]]
 
 local DeusUI = {
+    Icons = {},
     Themes = {
         Dark = { Main = Color3.fromRGB(22, 22, 28), Secondary = Color3.fromRGB(18, 18, 23), ChannelBG = Color3.fromRGB(14, 14, 18), Outline = Color3.fromRGB(38, 38, 50), Text = Color3.fromRGB(245, 245, 250), TextSecondary = Color3.fromRGB(140, 142, 160), Accent = Color3.fromRGB(108, 92, 231), Success = Color3.fromRGB(0, 210, 106), Danger = Color3.fromRGB(255, 56, 56), Transparency = 0 },
         Midnight = { Main = Color3.fromRGB(10, 10, 16), Secondary = Color3.fromRGB(6, 6, 12), ChannelBG = Color3.fromRGB(3, 3, 8), Outline = Color3.fromRGB(28, 28, 48), Text = Color3.fromRGB(240, 240, 255), TextSecondary = Color3.fromRGB(120, 120, 155), Accent = Color3.fromRGB(80, 140, 255), Success = Color3.fromRGB(40, 220, 130), Danger = Color3.fromRGB(255, 70, 70), Transparency = 0 },
@@ -36,9 +37,19 @@ local Camera = workspace.CurrentCamera
 
 -- // --- INTERNAL UTILITIES --- // --
 local function FetchIcons()
-    if next(DeusUI.Icons) then return end
-    local success, result = pcall(function() return loadstring(game:HttpGet(DeusUI.IconURL))() end)
-    if success and type(result) == "table" then DeusUI.Icons = result end
+    if type(DeusUI.Icons) == "table" and next(DeusUI.Icons) then return end
+    pcall(function()
+        local ok, response = pcall(function() return game:HttpGet(DeusUI.IconURL) end)
+        if ok and type(response) == "string" and response ~= "" then
+            local result = loadstring(response)
+            if result then
+                local icons = result()
+                if type(icons) == "table" then
+                    DeusUI.Icons = icons
+                end
+            end
+        end
+    end)
 end
 
 function DeusUI:Create(className, properties, children)
