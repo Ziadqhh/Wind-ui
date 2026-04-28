@@ -36,7 +36,22 @@ local DeusUI = {
             Transparency = 0 
         }
     },
-    Icons = {},
+    Icons = {
+        ["layout"] = "rbxassetid://10734950309",
+        ["minimize-2"] = "rbxassetid://10734950309",
+        ["x"] = "rbxassetid://10734950309",
+        ["settings"] = "rbxassetid://10734950309",
+        ["home"] = "rbxassetid://10734950309",
+        ["user"] = "rbxassetid://10734950309",
+        ["shield-check"] = "rbxassetid://10734950309",
+        ["activity"] = "rbxassetid://10734950309",
+        ["search"] = "rbxassetid://10734950309",
+        ["edit-3"] = "rbxassetid://10734950309",
+        ["cpu"] = "rbxassetid://10734950309",
+        ["eye"] = "rbxassetid://10734950309",
+        ["command"] = "rbxassetid://10734950309",
+        ["hexagon"] = "rbxassetid://10734950309"
+    },
     IconURL = "https://raw.githubusercontent.com/Ziadqhh/Wind-ui/refs/heads/main/icon%20pack.lua",
     CurrentTheme = "Dark",
     Elements = {},
@@ -60,15 +75,7 @@ local Camera = workspace.CurrentCamera
 
 -- // --- INTERNAL UTILITIES --- // --
 local function FetchIcons()
-    if type(DeusUI.Icons) == "table" and next(DeusUI.Icons) then return end
-    task.spawn(function()
-        local ok, result = pcall(function()
-            return loadstring(game:HttpGet(DeusUI.IconURL))()
-        end)
-        if ok and type(result) == "table" then
-            DeusUI.Icons = result
-        end
-    end)
+    -- Using built-in fallback icons now
 end
 
 function DeusUI:Create(className, properties, children)
