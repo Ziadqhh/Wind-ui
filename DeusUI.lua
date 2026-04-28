@@ -38,15 +38,14 @@ local Camera = workspace.CurrentCamera
 -- // --- INTERNAL UTILITIES --- // --
 local function FetchIcons()
     if type(DeusUI.Icons) == "table" and next(DeusUI.Icons) then return end
-    pcall(function()
-        local ok, response = pcall(function() return game:HttpGet(DeusUI.IconURL) end)
-        if ok and type(response) == "string" and response ~= "" then
-            local result = loadstring(response)
-            if result then
-                local icons = result()
-                if type(icons) == "table" then
-                    DeusUI.Icons = icons
-                end
+    task.spawn(function()
+        local success, response = pcall(function()
+            return game:HttpGet(DeusUI.IconURL)
+        end)
+        if success and type(response) == "string" and #response > 0 then
+            local ok, result = pcall(loadstring, response)
+            if ok and type(result) == "table" then
+                DeusUI.Icons = result
             end
         end
     end)
