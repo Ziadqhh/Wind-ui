@@ -9,8 +9,32 @@
 
 local DeusUI = {
     Themes = {
-        Dark = { Main = Color3.fromRGB(20, 20, 25), Secondary = Color3.fromRGB(15, 15, 20), ChannelBG = Color3.fromRGB(28, 28, 35), Outline = Color3.fromRGB(55, 55, 70), Text = Color3.fromRGB(230, 230, 235), TextSecondary = Color3.fromRGB(160, 160, 175), Accent = Color3.fromRGB(0, 200, 255), Success = Color3.fromRGB(0, 255, 130), Danger = Color3.fromRGB(255, 80, 90), Transparency = 0 },
-        Midnight = { Main = Color3.fromRGB(10, 10, 15), Secondary = Color3.fromRGB(8, 8, 12), ChannelBG = Color3.fromRGB(18, 18, 25), Outline = Color3.fromRGB(40, 40, 60), Text = Color3.fromRGB(230, 230, 240), TextSecondary = Color3.fromRGB(140, 145, 160), Accent = Color3.fromRGB(120, 180, 255), Success = Color3.fromRGB(60, 220, 140), Danger = Color3.fromRGB(255, 90, 100), Transparency = 0 }
+        Dark = { 
+            Main = Color3.fromRGB(18, 18, 22), 
+            Secondary = Color3.fromRGB(13, 13, 18), 
+            ChannelBG = Color3.fromRGB(25, 25, 32), 
+            Outline = Color3.fromRGB(48, 48, 62), 
+            Text = Color3.fromRGB(235, 235, 240), 
+            TextSecondary = Color3.fromRGB(155, 155, 170), 
+            Accent = Color3.fromRGB(0, 195, 255), 
+            Success = Color3.fromRGB(0, 230, 115), 
+            Danger = Color3.fromRGB(255, 75, 85), 
+            Hover = Color3.fromRGB(35, 35, 45),
+            Transparency = 0 
+        },
+        Midnight = { 
+            Main = Color3.fromRGB(8, 8, 12), 
+            Secondary = Color3.fromRGB(6, 6, 10), 
+            ChannelBG = Color3.fromRGB(15, 15, 22), 
+            Outline = Color3.fromRGB(35, 35, 55), 
+            Text = Color3.fromRGB(225, 225, 235), 
+            TextSecondary = Color3.fromRGB(135, 140, 155), 
+            Accent = Color3.fromRGB(110, 170, 255), 
+            Success = Color3.fromRGB(55, 215, 125), 
+            Danger = Color3.fromRGB(255, 85, 95), 
+            Hover = Color3.fromRGB(30, 30, 45),
+            Transparency = 0 
+        }
     },
     Icons = {},
     IconURL = "https://raw.githubusercontent.com/Ziadqhh/Wind-ui/refs/heads/main/icon%20pack.lua",
@@ -420,23 +444,43 @@ function DeusUI:CreateWindow(config)
         return btn 
     end
     
+    local MinBtn = CreateControlButton("Min", "─", theme.TextSecondary)
     local CloseBtn = CreateControlButton("Close", "✕", theme.Danger)
     local Controls = self:Create("Frame", { 
         Name = "Controls", 
         Parent = Topbar, 
-        Size = UDim2.new(0, 30, 1, 0), 
-        Position = UDim2.new(1, -5, 0, 0), 
+        Size = UDim2.new(0, 60, 1, 0), 
+        Position = UDim2.new(1, -8, 0, 0), 
         AnchorPoint = Vector2.new(1, 0), 
         BackgroundTransparency = 1, 
         ZIndex = 100 
     }, { 
         self:Create("UIListLayout", { FillDirection = "Horizontal", Padding = UDim.new(0, 4), VerticalAlignment = "Center", HorizontalAlignment = "Right" }) 
     })
+    MinBtn.Parent = Controls
     CloseBtn.Parent = Controls
+    
+    local isMinimized = false
+    
+    MinBtn.MouseButton1Click:Connect(function()
+        isMinimized = not isMinimized
+        if isMinimized then
+            self:Tween(MainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+                Size = UDim2.new(0, 480, 0, 44),
+                GroupTransparency = 0.95
+            })
+        else
+            self:Tween(MainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = WindowSize,
+                GroupTransparency = 0
+            })
+        end
+    end)
+    
     CloseBtn.MouseButton1Click:Connect(function() 
-        self:Tween(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {GroupTransparency = 1})
-        self:Tween(self.UIScale, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Scale = 0.8})
-        task.delay(0.45, function() ScreenGui:Destroy() end) 
+        self:Tween(MainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {GroupTransparency = 1})
+        self:Tween(self.UIScale, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Scale = 0.8})
+        task.delay(0.4, function() ScreenGui:Destroy() end) 
     end)
     local dragging, dragStart, startPos; Topbar.InputBegan:Connect(function(input) if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then dragging = true; dragStart = input.Position; startPos = MainFrame.Position; input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end) end end); UserInputService.InputChanged:Connect(function(input) if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then local delta = input.Position - dragStart; MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y) end end)
     local OrderTracker = 0; local WindowMethods = {}
@@ -555,10 +599,99 @@ function DeusUI:CreateWindow(config)
         TabBtn.MouseButton1Click:Connect(function() for _, p in pairs(PageContainer:GetChildren()) do if p:IsA("ScrollingFrame") then p.Visible = false end end; for _, el in pairs(DeusUI.Elements) do if el.Type == "TabBtn" then el.Selected = false; local eInst = el.Instance; DeusUI:Tween(eInst, TweenInfo.new(0.2), {BackgroundTransparency = 1}); DeusUI:Tween(eInst.Indicator, TweenInfo.new(0.2), {Size = UDim2.new(0, 3, 0, 6), BackgroundTransparency = 1}); DeusUI:Tween(eInst.Content.Label, TweenInfo.new(0.2), {TextColor3 = DeusUI.Themes[DeusUI.CurrentTheme].TextSecondary}); if eInst.Content:FindFirstChild("Icon") then DeusUI:Tween(eInst.Content.Icon, TweenInfo.new(0.2), {ImageColor3 = DeusUI.Themes[DeusUI.CurrentTheme].TextSecondary}) end end end; Page.Visible = true; SetTabState(true); Topbar.TabTitle.Text = tabTitle end)
         if not DeusUI.SelectedTab then DeusUI.SelectedTab = true; Page.Visible = true; SetTabState(true); Topbar.TabTitle.Text = tabTitle end
         local TabMethods = {}
-        function TabMethods:Section(title) local Sec = DeusUI:Create("TextLabel", { Parent = Page, Size = UDim2.new(1, 0, 0, 20), BackgroundTransparency = 1, Text = title:upper(), TextColor3 = DeusUI.Themes[DeusUI.CurrentTheme].Accent, TextSize = 10, Font = Enum.Font.GothamBold, TextXAlignment = "Left", ZIndex = 4 }); table.insert(DeusUI.Elements, {Instance = Sec, Type = "SectionText"}); return Sec end
-        function TabMethods:Button(btnConfig) local Button = DeusUI:Create("TextButton", { Parent = Page, Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = DeusUI.Themes[DeusUI.CurrentTheme].Accent, Text = btnConfig.Title or "Button", TextColor3 = Color3.new(1,1,1), TextSize = 11, Font = Enum.Font.GothamBold, AutoButtonColor = false, ZIndex = 4 }, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(0, 4)}) }); table.insert(DeusUI.Elements, {Instance = Button, Type = "Button"}); Button.MouseButton1Click:Connect(function() btnConfig.Callback() end) end
+        function TabMethods:Section(title) 
+            local Sec = DeusUI:Create("TextLabel", { 
+                Parent = Page, 
+                Size = UDim2.new(1, 0, 0, 22), 
+                BackgroundTransparency = 1, 
+                Text = title:upper(), 
+                TextColor3 = DeusUI.Themes[DeusUI.CurrentTheme].Accent, 
+                TextSize = 10, 
+                Font = Enum.Font.GothamBold, 
+                TextXAlignment = "Left", 
+                ZIndex = 4 
+            })
+            table.insert(DeusUI.Elements, {Instance = Sec, Type = "SectionText"})
+            return Sec 
+        end
+        
+        function TabMethods:Button(btnConfig) 
+            local Button = DeusUI:Create("TextButton", { 
+                Parent = Page, 
+                Size = UDim2.new(1, 0, 0, 34), 
+                BackgroundColor3 = theme.Accent, 
+                Text = btnConfig.Title or "Button", 
+                TextColor3 = Color3.new(1,1,1), 
+                TextSize = 12, 
+                Font = Enum.Font.GothamBold, 
+                AutoButtonColor = false, 
+                ZIndex = 4 
+            }, { 
+                DeusUI:Create("UICorner", {CornerRadius = UDim.new(0, 6)}),
+                DeusUI:Create("UIStroke", {Color = Color3.new(1,1,1), Transparency = 0.3, Thickness = 1})
+            })
+            table.insert(DeusUI.Elements, {Instance = Button, Type = "Button"})
+            Button.MouseButton1Click:Connect(function() btnConfig.Callback() end)
+        end
+        
         function TabMethods:Toggle(tConfig)
-            local toggled = tConfig.Default or false; local current = DeusUI.Themes[DeusUI.CurrentTheme]; local ToggleFrame = DeusUI:Create("Frame", { Parent = Page, Size = UDim2.new(1, 0, 0, 32), BackgroundTransparency = 1, ZIndex = 4 }, { DeusUI:Create("TextLabel", {Name = "T", Text = tConfig.Title or "Toggle", BackgroundTransparency = 1, TextColor3 = current.Text, TextSize = 12, Font = Enum.Font.GothamMedium, Size = UDim2.new(1, -45, 1, 0), TextXAlignment = "Left", ZIndex = 5}) }); table.insert(DeusUI.Elements, {Instance = ToggleFrame.T, Type = "TextColor"}); local Switch = DeusUI:Create("TextButton", { Parent = ToggleFrame, Size = UDim2.new(0, 32, 0, 16), Position = UDim2.new(1, 0, 0.5, 0), AnchorPoint = Vector2.new(1, 0.5), BackgroundColor3 = toggled and current.Success or Color3.fromRGB(128, 132, 142), Text = "", ZIndex = 5 }, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) }); local Circle = DeusUI:Create("Frame", { Parent = Switch, Size = UDim2.new(0, 12, 0, 12), Position = toggled and UDim2.new(1, -2, 0.5, 0) or UDim2.new(0, 2, 0.5, 0), AnchorPoint = toggled and Vector2.new(1, 0.5) or Vector2.new(0, 0.5), BackgroundColor3 = Color3.new(1, 1, 1), ZIndex = 6 }, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) }); local tData = {Instance = Switch, Type = "ToggleSwitch", Toggled = toggled}; table.insert(DeusUI.Elements, tData); Switch.MouseButton1Click:Connect(function() toggled = not toggled; tData.Toggled = toggled; DeusUI:Tween(Circle, TweenInfo.new(0.2), {Position = toggled and UDim2.new(1, -2, 0.5, 0) or UDim2.new(0, 2, 0.5, 0), AnchorPoint = toggled and Vector2.new(1, 0.5) or Vector2.new(0, 0.5)}); DeusUI:Tween(Switch, TweenInfo.new(0.2), {BackgroundColor3 = toggled and DeusUI.Themes[DeusUI.CurrentTheme].Success or Color3.fromRGB(128, 132, 142)}); tConfig.Callback(toggled) end)
+            local toggled = tConfig.Default or false
+            local current = DeusUI.Themes[DeusUI.CurrentTheme]
+            local ToggleFrame = DeusUI:Create("Frame", { 
+                Parent = Page, 
+                Size = UDim2.new(1, 0, 0, 34), 
+                BackgroundTransparency = 1, 
+                ZIndex = 4 
+            }, { 
+                DeusUI:Create("TextLabel", {
+                    Name = "T", 
+                    Text = tConfig.Title or "Toggle", 
+                    BackgroundTransparency = 1, 
+                    TextColor3 = current.Text, 
+                    TextSize = 12, 
+                    Font = Enum.Font.GothamMedium, 
+                    Size = UDim2.new(1, -44, 1, 0), 
+                    TextXAlignment = "Left", 
+                    ZIndex = 5
+                })
+            })
+            table.insert(DeusUI.Elements, {Instance = ToggleFrame.T, Type = "TextColor"})
+            local Switch = DeusUI:Create("TextButton", { 
+                Parent = ToggleFrame, 
+                Size = UDim2.new(0, 36, 0, 18), 
+                Position = UDim2.new(1, 0, 0.5, 0), 
+                AnchorPoint = Vector2.new(1, 0.5), 
+                BackgroundColor3 = toggled and current.Success or current.ChannelBG, 
+                Text = "", 
+                ZIndex = 5 
+            }, { 
+                DeusUI:Create("UICorner", {CornerRadius = UDim.new(0, 9)}),
+                DeusUI:Create("UIStroke", {Color = current.Outline, Transparency = 0.5, Thickness = 1})
+            })
+            local Circle = DeusUI:Create("Frame", { 
+                Parent = Switch, 
+                Size = UDim2.new(0, 14, 0, 14), 
+                Position = toggled and UDim2.new(1, -2, 0.5, 0) or UDim2.new(0, 2, 0.5, 0), 
+                AnchorPoint = toggled and Vector2.new(1, 0.5) or Vector2.new(0, 0.5), 
+                BackgroundColor3 = Color3.new(1, 1, 1), 
+                ZIndex = 6 
+            }, { 
+                DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) 
+            })
+            local tData = {Instance = Switch, Type = "ToggleSwitch", Toggled = toggled}
+            table.insert(DeusUI.Elements, tData)
+            Switch.MouseButton1Click:Connect(function() 
+                toggled = not toggled; 
+                tData.Toggled = toggled
+                DeusUI:Tween(Circle, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                    Position = toggled and UDim2.new(1, -2, 0.5, 0) or UDim2.new(0, 2, 0.5, 0), 
+                    AnchorPoint = toggled and Vector2.new(1, 0.5) or Vector2.new(0, 0.5)
+                })
+                DeusUI:Tween(Switch, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                    BackgroundColor3 = toggled and current.Success or current.ChannelBG
+                })
+                tConfig.Callback(toggled) 
+            end)
         end
         function TabMethods:Slider(sConfig)
             local min, max, val = sConfig.Min or 0, sConfig.Max or 100, sConfig.Default or 50; local current = DeusUI.Themes[DeusUI.CurrentTheme]; local SliderFrame = DeusUI:Create("Frame", { Parent = Page, Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1, ZIndex = 4 }, { DeusUI:Create("TextLabel", {Name = "T", Text = sConfig.Title or "Slider", BackgroundTransparency = 1, TextColor3 = current.Text, TextSize = 11, Font = Enum.Font.GothamMedium, Size = UDim2.new(0.7, 0, 0, 14), TextXAlignment = "Left", ZIndex = 5}), DeusUI:Create("TextLabel", {Name = "Val", Text = tostring(val), BackgroundTransparency = 1, TextColor3 = current.TextSecondary, TextSize = 10, Font = Enum.Font.GothamBold, Size = UDim2.new(0.3, 0, 0, 14), Position = UDim2.new(0.7, 0, 0, 0), TextXAlignment = "Right", ZIndex = 5}) }); table.insert(DeusUI.Elements, {Instance = SliderFrame.T, Type = "TextColor"}); local Bar = DeusUI:Create("Frame", {Parent = SliderFrame, Size = UDim2.new(1, 0, 0, 4), Position = UDim2.new(0, 0, 0, 24), BackgroundColor3 = current.ChannelBG, ZIndex = 5}, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) }); table.insert(DeusUI.Elements, {Instance = Bar, Type = "SecondaryBG"}); local Fill = DeusUI:Create("Frame", {Parent = Bar, Size = UDim2.new((val-min)/(max-min), 0, 1, 0), BackgroundColor3 = current.Accent, ZIndex = 6}, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}) }); table.insert(DeusUI.Elements, {Instance = Fill, Type = "SliderFill"}); local Knob = DeusUI:Create("Frame", {Parent = Fill, Size = UDim2.new(0, 10, 0, 10), Position = UDim2.new(1, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Color3.new(1, 1, 1), ZIndex = 7}, { DeusUI:Create("UICorner", {CornerRadius = UDim.new(1, 0)}), DeusUI:Create("UIStroke", {Color = current.Accent, Thickness = 1.5}) }); local dragging = false; local function update(input) local pos = math.clamp((input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1); val = math.floor(min + (max - min) * pos); SliderFrame.Val.Text = tostring(val); Fill.Size = UDim2.new(pos, 0, 1, 0); sConfig.Callback(val) end; Bar.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = true; update(input) end end); UserInputService.InputChanged:Connect(function(input) if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then update(input) end end); UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
