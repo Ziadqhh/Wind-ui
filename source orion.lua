@@ -1862,7 +1862,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			Container:FindFirstChild("UIPadding"):Destroy()
 			SetChildren(SetProps(MakeElement("TFrame"), {
 				Size = UDim2.new(1, 0, 1, 0),
-				Parent = ItemParent
+				Parent = Container
 			}), {
 				AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://3610239960"), {
 					Size = UDim2.new(0, 18, 0, 18),
@@ -1947,4 +1947,3 @@ function OrionLib:Destroy()
 end
 
 return OrionLib
-ionLib
