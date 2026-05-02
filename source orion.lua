@@ -21,6 +21,60 @@ local OrionLib = {
 			Text = Color3.fromRGB(255, 255, 255),
 			TextDark = Color3.fromRGB(180, 160, 160),
 			Accent = Color3.fromRGB(180, 0, 0)
+		},
+		BloodMoon = {
+			Main = Color3.fromRGB(12, 10, 10),
+			Second = Color3.fromRGB(18, 15, 15),
+			Stroke = Color3.fromRGB(60, 10, 10),
+			Divider = Color3.fromRGB(40, 12, 12),
+			Text = Color3.fromRGB(255, 240, 240),
+			TextDark = Color3.fromRGB(180, 120, 120),
+			Accent = Color3.fromRGB(220, 0, 0)
+		},
+		Midnight = {
+			Main = Color3.fromRGB(10, 10, 15),
+			Second = Color3.fromRGB(15, 15, 22),
+			Stroke = Color3.fromRGB(25, 25, 45),
+			Divider = Color3.fromRGB(20, 20, 35),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(160, 160, 200),
+			Accent = Color3.fromRGB(100, 100, 255)
+		},
+		Emerald = {
+			Main = Color3.fromRGB(10, 15, 10),
+			Second = Color3.fromRGB(15, 22, 15),
+			Stroke = Color3.fromRGB(25, 45, 25),
+			Divider = Color3.fromRGB(20, 35, 20),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(160, 200, 160),
+			Accent = Color3.fromRGB(0, 200, 100)
+		},
+		Oceanic = {
+			Main = Color3.fromRGB(10, 15, 20),
+			Second = Color3.fromRGB(15, 22, 30),
+			Stroke = Color3.fromRGB(25, 45, 60),
+			Divider = Color3.fromRGB(20, 35, 50),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(160, 200, 230),
+			Accent = Color3.fromRGB(0, 180, 255)
+		},
+		Amethyst = {
+			Main = Color3.fromRGB(15, 10, 20),
+			Second = Color3.fromRGB(22, 15, 30),
+			Stroke = Color3.fromRGB(45, 25, 60),
+			Divider = Color3.fromRGB(35, 20, 50),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(200, 160, 230),
+			Accent = Color3.fromRGB(180, 100, 255)
+		},
+		Gold = {
+			Main = Color3.fromRGB(15, 15, 10),
+			Second = Color3.fromRGB(22, 22, 15),
+			Stroke = Color3.fromRGB(45, 45, 25),
+			Divider = Color3.fromRGB(35, 35, 20),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(200, 200, 160),
+			Accent = Color3.fromRGB(255, 200, 0)
 		}
 	},
 	SelectedTheme = "Default",
@@ -790,12 +844,18 @@ function OrionLib:MakeWindow(WindowConfig)
 		Config = type(Config) == "string" and {Icon = Config} or Config
 		Config.Icon = Config.Icon or ""
 		Config.Color = Config.Color or OrionLib.Themes[OrionLib.SelectedTheme].Text
+		Config.Callback = Config.Callback or function() end
 		
-		local Icon = SetProps(MakeElement("Image", Config.Icon), {
+		local Icon = SetProps(MakeElement("ImageButton", Config.Icon), {
 			Parent = MainWindow.TopBar.CustomItems,
 			Size = UDim2.new(0, 20, 0, 20),
-			ImageColor3 = Config.Color
+			ImageColor3 = Config.Color,
+			BackgroundTransparency = 1
 		})
+
+		AddConnection(Icon.MouseButton1Click, function()
+			Config.Callback()
+		end)
 		
 		local IconFunc = {}
 		function IconFunc:Set(NewIcon) Icon.Image = GetIcon(NewIcon) or NewIcon end
@@ -841,6 +901,159 @@ function OrionLib:MakeWindow(WindowConfig)
 		function BtnFunc:SetText(NewText) TopBtn.TextLabel.Text = NewText end
 		function BtnFunc:SetColor(NewColor) TopBtn.BackgroundColor3 = NewColor end
 		return BtnFunc
+	end
+
+	function TabFunction:AddSettingsTab()
+		local TabBtn = nil
+
+		local SettingsBtn = TabFunction:AddTopIcon({
+			Icon = "settings",
+			Color = OrionLib.Themes[OrionLib.SelectedTheme].Text,
+			Callback = function()
+				if TabBtn then
+					local Connections = getconnections or get_signal_cons
+					if Connections then
+						for _, v in pairs(Connections(TabBtn.MouseButton1Up)) do
+							v:Fire()
+						end
+					end
+				end
+			end
+		})
+
+		local SettingsTab = TabFunction:MakeTab({
+			Name = "Settings",
+			Icon = "settings"
+		})
+
+		-- Telegram Style Profile Section
+		function SettingsTab:AddProfileSection()
+			local Player = game:GetService("Players").LocalPlayer
+			local ProfileFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
+				Size = UDim2.new(1, 0, 0, 100),
+				Parent = SettingsTab.Container -- We need to access the container
+			}), {
+				AddThemeObject(MakeElement("Stroke"), "Stroke"),
+				SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 1, 0), {
+					Size = UDim2.new(0, 70, 0, 70),
+					Position = UDim2.new(0, 15, 0.5, 0),
+					AnchorPoint = Vector2.new(0, 0.5),
+					ClipsDescendants = true,
+					Name = "AvatarHolder"
+				}), {
+					SetProps(Create("ImageLabel", {
+						Size = UDim2.new(1, 0, 1, 0),
+						Image = game:GetService("Players"):GetUserThumbnailAsync(Player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150),
+						BackgroundTransparency = 1,
+						Name = "Avatar"
+					}), {})
+				}),
+				AddThemeObject(SetProps(MakeElement("Label", Player.DisplayName, 18), {
+					Size = UDim2.new(1, -100, 0, 22),
+					Position = UDim2.new(0, 100, 0, 28),
+					Font = Enum.Font.GothamBold,
+					Name = "DisplayName"
+				}), "Text"),
+				AddThemeObject(SetProps(MakeElement("Label", "@" .. Player.Name, 14), {
+					Size = UDim2.new(1, -100, 0, 18),
+					Position = UDim2.new(0, 100, 0, 52),
+					Font = Enum.Font.GothamMedium,
+					Name = "Username"
+				}), "TextDark")
+			}), "Second")
+
+			return ProfileFrame
+		end
+		
+		SettingsTab:AddProfileSection()
+
+		local ThemeList = {}
+		for i, v in pairs(OrionLib.Themes) do
+			table.insert(ThemeList, i)
+		end
+
+		SettingsTab:AddDropdown({
+			Name = "Select Theme",
+			Default = OrionLib.SelectedTheme,
+			Options = ThemeList,
+			Callback = function(Value)
+				OrionLib.SelectedTheme = Value
+				SetTheme()
+			end
+		})
+
+		local UISettings = SettingsTab:AddSection({Name = "UI Customization"})
+
+		UISettings:AddSlider({
+			Name = "Window Transparency",
+			Min = 0,
+			Max = 100,
+			Default = 0,
+			Increment = 1,
+			ValueName = "%",
+			Callback = function(Value)
+				MainWindow.BackgroundTransparency = Value / 100
+				MainWindow.TopBar.BackgroundTransparency = Value / 100
+				WindowStuff.BackgroundTransparency = Value / 100
+			end
+		})
+
+		local PlayerSettings = SettingsTab:AddSection({Name = "Player Utilities"})
+
+		PlayerSettings:AddSlider({
+			Name = "WalkSpeed",
+			Min = 16,
+			Max = 500,
+			Default = 16,
+			Increment = 1,
+			ValueName = "ws",
+			Callback = function(Value)
+				pcall(function()
+					game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = Value
+				end)
+			end
+		})
+
+		PlayerSettings:AddSlider({
+			Name = "JumpPower",
+			Min = 50,
+			Max = 500,
+			Default = 50,
+			Increment = 1,
+			ValueName = "jp",
+			Callback = function(Value)
+				pcall(function()
+					game:GetService("Players").LocalPlayer.Character.Humanoid.UseJumpPower = true
+					game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
+				end)
+			end
+		})
+
+		local InfiniteJumpEnabled = false
+		PlayerSettings:AddToggle({
+			Name = "Infinite Jump",
+			Default = false,
+			Callback = function(Value)
+				InfiniteJumpEnabled = Value
+			end
+		})
+
+		AddConnection(game:GetService("UserInputService").JumpRequest, function()
+			if InfiniteJumpEnabled then
+				pcall(function()
+					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+				end)
+			end
+		end)
+
+		for _, v in next, TabHolder:GetChildren() do
+			if v:IsA("TextButton") and v:FindFirstChild("Title") and v.Title.Text == "Settings" then
+				TabBtn = v
+				break
+			end
+		end
+		
+		return SettingsTab
 	end
 
 	function TabFunction:MakeTab(TabConfig)
@@ -899,6 +1112,9 @@ function OrionLib:MakeWindow(WindowConfig)
 			MakeElement("List", 0, 6),
 			MakeElement("Padding", 15, 12, 12, 15)
 		}), "Divider")
+		
+		local TabReturn = {}
+		TabReturn.Container = Container
 
 		AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
@@ -1897,12 +2113,14 @@ function OrionLib:MakeWindow(WindowConfig)
 		end	
 
 		for i, v in next, GetElements(Container) do
-			ElementFunction[i] = v 
+			TabReturn[i] = v 
 		end
 
 		if TabConfig.PremiumOnly then
-			for i, v in next, ElementFunction do
-				ElementFunction[i] = function() end
+			for i, v in next, TabReturn do
+				if type(v) == "function" then
+					TabReturn[i] = function() end
+				end
 			end    
 			Container:FindFirstChild("UIListLayout"):Destroy()
 			Container:FindFirstChild("UIPadding"):Destroy()
@@ -1937,7 +2155,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				}), "Text")
 			})
 		end
-		return ElementFunction   
+		return TabReturn   
 	end  
 	
 	--if writefile and isfile then
