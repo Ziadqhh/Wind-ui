@@ -639,13 +639,13 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowStuff
 	}), "Main")
 
-	local ResizeBtn = SetProps(MakeElement("ImageButton", "rbxassetid://13444413110"), {
+	local ResizeBtn = SetProps(MakeElement("ImageButton", "rbxassetid://73644438398569"), {
 		Parent = MainWindow,
-		Size = UDim2.new(0, 14, 0, 14),
-		Position = UDim2.new(1, -2, 1, -2),
+		Size = UDim2.new(0, 16, 0, 16),
+		Position = UDim2.new(1, -4, 1, -4),
 		AnchorPoint = Vector2.new(1, 1),
-		ImageTransparency = 0.4,
-		ImageColor3 = OrionLib.Themes[OrionLib.SelectedTheme].TextDark,
+		ImageTransparency = 0.2,
+		ImageColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Accent,
 		ZIndex = 10,
 		Name = "ResizeHandle"
 	})
