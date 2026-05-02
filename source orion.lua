@@ -14,13 +14,13 @@ local OrionLib = {
 	Flags = {},
 	Themes = {
 		Default = {
-			Main = Color3.fromRGB(24, 24, 26),
-			Second = Color3.fromRGB(32, 32, 35),
-			Stroke = Color3.fromRGB(45, 45, 48),
-			Divider = Color3.fromRGB(40, 40, 42),
+			Main = Color3.fromRGB(15, 15, 17),
+			Second = Color3.fromRGB(22, 22, 25),
+			Stroke = Color3.fromRGB(45, 20, 20),
+			Divider = Color3.fromRGB(35, 15, 15),
 			Text = Color3.fromRGB(255, 255, 255),
-			TextDark = Color3.fromRGB(150, 150, 155),
-			Accent = Color3.fromRGB(110, 100, 255)
+			TextDark = Color3.fromRGB(180, 160, 160),
+			Accent = Color3.fromRGB(180, 0, 0)
 		}
 	},
 	SelectedTheme = "Default",
@@ -265,7 +265,7 @@ end
 
 CreateElement("Corner", function(Scale, Offset)
 	local Corner = Create("UICorner", {
-		CornerRadius = UDim.new(Scale or 0, Offset or 10)
+		CornerRadius = UDim.new(Scale or 0, Offset or 6)
 	})
 	return Corner
 end)
@@ -273,7 +273,8 @@ end)
 CreateElement("Stroke", function(Color, Thickness)
 	local Stroke = Create("UIStroke", {
 		Color = Color or Color3.fromRGB(255, 255, 255),
-		Thickness = Thickness or 1
+		Thickness = Thickness or 1.2,
+		ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	})
 	return Stroke
 end)
@@ -595,24 +596,24 @@ function OrionLib:MakeWindow(WindowConfig)
 		Position = UDim2.new(0, 0, 1, -1)
 	}), "Stroke")
 
-	local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+	local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 6), {
 		Parent = Orion,
 		Position = UDim2.new(0.5, -WindowConfig.Size.X.Offset / 2, 0.5, -WindowConfig.Size.Y.Offset / 2),
 		Size = WindowConfig.Size,
 		ClipsDescendants = true
 	}), {
-		SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Stroke, 1), {
-			Transparency = 0.2
+		SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Stroke, 1.2), {
+			Transparency = 0.1
 		}),
-		AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+		AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 6), {
 			Size = UDim2.new(1, 0, 0, 42),
 			Name = "TopBar"
 		}), {
 			AddThemeObject(SetProps(MakeElement("Frame"), {
-				Size = UDim2.new(1, 0, 0, 5),
-				Position = UDim2.new(0, 0, 1, -5),
+				Size = UDim2.new(1, 0, 0, 3),
+				Position = UDim2.new(0, 0, 1, -3),
 				BorderSizePixel = 0
-			}), "Second"),
+			}), "Accent"),
 			WindowName,
 			SetChildren(SetProps(MakeElement("TFrame"), {
 				Size = UDim2.new(1, -250, 1, 0),
