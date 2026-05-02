@@ -639,7 +639,7 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowStuff
 	}), "Main")
 
-	local ResizeBtn = SetProps(MakeElement("ImageButton", "rbxassetid://73644438398569"), {
+	local ResizeBtn = SetProps(MakeElement("ImageButton", "http://www.roblox.com/asset/?id=98972365591536"), {
 		Parent = MainWindow,
 		Size = UDim2.new(0, 16, 0, 16),
 		Position = UDim2.new(1, -4, 1, -4),
