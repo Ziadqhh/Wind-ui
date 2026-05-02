@@ -493,17 +493,18 @@ function OrionLib:MakeWindow(WindowConfig)
 	end
 
 	local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 0), {
-		Size = UDim2.new(1, -145, 1, 0),
+		Size = UDim2.new(1, 0, 1, -42),
+		Position = UDim2.new(0, 0, 0, 42),
 		CanvasSize = UDim2.new(0, 0, 0, 0),
 		ScrollBarThickness = 0
 	}), {
-		SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8)}),
-		MakeElement("Padding", 0, 10, 10, 0)
+		SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 8)}),
+		MakeElement("Padding", 10, 8, 8, 10)
 	}), "Divider")
 
 	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
-		Size = UDim2.new(0, 130, 0, 24),
-		Position = UDim2.new(1, -140, 0, 7),
+		Size = UDim2.new(1, -16, 0, 28),
+		Position = UDim2.new(0, 8, 0, 8),
 		BackgroundTransparency = 0.6
 	}), {
 		AddThemeObject(MakeElement("Stroke"), "Stroke"),
@@ -512,7 +513,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			Position = UDim2.new(0, 5, 0, 0),
 			BackgroundTransparency = 1,
 			Text = "",
-			PlaceholderText = "Search Tabs...",
+			PlaceholderText = "Search...",
 			Font = Enum.Font.Gotham,
 			TextSize = 12,
 			ClearTextOnFocus = false,
@@ -530,7 +531,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	end)
 
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-		TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X + 20, 0, 0)
+		TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 20)
 	end)
 
 	local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
@@ -559,18 +560,17 @@ function OrionLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
-		Size = UDim2.new(1, 0, 0, 38),
+	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 12), {
+		Size = UDim2.new(0, 150, 1, -42),
 		Position = UDim2.new(0, 0, 0, 42)
 	}), {
-		TabHolder,
 		TabSearch,
+		TabHolder,
 		AddThemeObject(SetProps(MakeElement("Frame"), {
-			Size = UDim2.new(1, 0, 0, 1),
-			Position = UDim2.new(0, 0, 1, -1)
-		}), "Stroke"), 
+			Size = UDim2.new(0, 1, 1, 0),
+			Position = UDim2.new(1, -1, 0, 0)
+		}), "Stroke"),
 	}), "Second")
-
 	local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
 		Size = UDim2.new(1, -30, 1, 0),
 		Position = UDim2.new(0, 20, 0, 0),
@@ -607,6 +607,13 @@ function OrionLib:MakeWindow(WindowConfig)
 				BorderSizePixel = 0
 			}), "Second"),
 			WindowName,
+			SetChildren(SetProps(MakeElement("TFrame"), {
+				Size = UDim2.new(1, -160, 1, 0),
+				Position = UDim2.new(0, 150, 0, 0),
+				Name = "CustomItems"
+			}), {
+				SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Horizontal, VerticalAlignment = Enum.VerticalAlignment.Center, Padding = UDim.new(0, 10)})
+			}),
 			Create("UIGradient", {
 				Rotation = 90,
 				Color = ColorSequence.new({
@@ -717,6 +724,61 @@ function OrionLib:MakeWindow(WindowConfig)
 	end	
 
 	local TabFunction = {}
+
+	function TabFunction:AddTopLabel(Text)
+		local Label = AddThemeObject(SetProps(MakeElement("Label", Text, 13), {
+			Parent = MainWindow.TopBar.CustomItems,
+			Size = UDim2.new(0, 0, 1, 0),
+			AutomaticSize = Enum.AutomaticSize.X,
+			Font = Enum.Font.GothamSemibold
+		}), "Text")
+		
+		local LabelFunc = {}
+		function LabelFunc:Set(NewText)
+			Label.Text = NewText
+		end
+		return LabelFunc
+	end
+
+	function TabFunction:AddTopIcon(IconID)
+		local Icon = AddThemeObject(SetProps(MakeElement("Image", IconID), {
+			Parent = MainWindow.TopBar.CustomItems,
+			Size = UDim2.new(0, 20, 0, 20),
+		}), "Text")
+		
+		local IconFunc = {}
+		function IconFunc:Set(NewIcon)
+			Icon.Image = GetIcon(NewIcon) or NewIcon
+		end
+		return IconFunc
+	end
+
+	function TabFunction:AddTopButton(Config)
+		Config = Config or {}
+		Config.Name = Config.Name or "Button"
+		Config.Callback = Config.Callback or function() end
+
+		local TopBtn = AddThemeObject(SetChildren(SetProps(MakeElement("Button"), {
+			Parent = MainWindow.TopBar.CustomItems,
+			Size = UDim2.new(0, 0, 0, 24),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 0
+		}), {
+			MakeElement("Corner", 0, 6),
+			AddThemeObject(SetProps(MakeElement("Label", Config.Name, 12), {
+				Size = UDim2.new(0, 0, 1, 0),
+				AutomaticSize = Enum.AutomaticSize.X,
+				Position = UDim2.new(0, 8, 0, 0),
+				Font = Enum.Font.GothamBold
+			}), "Text"),
+			SetProps(MakeElement("Padding", 0, 0, 16, 0), {})
+		}), "Main")
+
+		AddConnection(TopBtn.MouseButton1Click, function()
+			Config.Callback()
+		end)
+	end
+
 	function TabFunction:MakeTab(TabConfig)
 		TabConfig = TabConfig or {}
 		TabConfig.Name = TabConfig.Name or "Tab"
@@ -724,8 +786,7 @@ function OrionLib:MakeWindow(WindowConfig)
 		TabConfig.PremiumOnly = TabConfig.PremiumOnly or false
 
 		local TabFrame = AddThemeObject(SetChildren(SetProps(MakeElement("Button"), {
-			Size = UDim2.new(0, 0, 1, -8),
-			AutomaticSize = Enum.AutomaticSize.X,
+			Size = UDim2.new(1, 0, 0, 32),
 			BackgroundTransparency = 0, -- Solid background
 			Parent = TabHolder
 		}), {
@@ -742,14 +803,12 @@ function OrionLib:MakeWindow(WindowConfig)
 				Name = "Ico"
 			}), "Text"),
 			AddThemeObject(SetProps(MakeElement("Label", TabConfig.Name, 14), {
-				Size = UDim2.new(0, 0, 1, 0),
-				AutomaticSize = Enum.AutomaticSize.X,
+				Size = UDim2.new(1, -32, 1, 0),
 				Position = UDim2.new(0, 32, 0, 0),
 				Font = Enum.Font.GothamSemibold,
 				TextTransparency = 0.4,
 				Name = "Title"
 			}), "Text"),
-			SetProps(MakeElement("Padding", 0, 0, 12, 0), {})
 		}), "Second")
 
 		AddConnection(TabFrame.MouseEnter, function()
@@ -771,8 +830,8 @@ function OrionLib:MakeWindow(WindowConfig)
 		end	
 
 		local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
-			Size = UDim2.new(1, 0, 1, -80),
-			Position = UDim2.new(0, 0, 0, 80),
+			Size = UDim2.new(1, -150, 1, -42),
+			Position = UDim2.new(0, 150, 0, 42),
 			Parent = MainWindow,
 			Visible = false,
 			Name = "ItemContainer"
