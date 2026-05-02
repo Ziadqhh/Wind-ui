@@ -49,6 +49,7 @@ end
 
 local Orion = Instance.new("ScreenGui")
 Orion.Name = "Orion"
+Orion.ZIndexBehavior = Enum.ZIndexBehavior.Global
 if syn then
 	syn.protect_gui(Orion)
 	Orion.Parent = game.CoreGui
@@ -591,8 +592,17 @@ function OrionLib:MakeWindow(WindowConfig)
 		Parent = Orion,
 		Position = UDim2.new(0.5, -WindowConfig.Size.X.Offset / 2, 0.5, -WindowConfig.Size.Y.Offset / 2),
 		Size = WindowConfig.Size,
-		ClipsDescendants = true
+		ClipsDescendants = false
 	}), {
+		AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://6015667343"), {
+			Size = UDim2.new(1, 120, 1, 120),
+			Position = UDim2.new(0.5, 0, 0.5, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			ImageTransparency = 0.5,
+			BackgroundTransparency = 1,
+			Name = "Glow",
+			ZIndex = -1
+		}), "Accent"),
 		SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Stroke, 1), {
 			Transparency = 0.2
 		}),
@@ -661,7 +671,7 @@ function OrionLib:MakeWindow(WindowConfig)
 
 	AddConnection(MinimizeBtn.MouseButton1Up, function()
 		if Minimized then
-			TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 615, 0, 344)}):Play()
+			TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = WindowConfig.Size}):Play()
 			MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
 			wait(.02)
 			MainWindow.ClipsDescendants = false
@@ -810,6 +820,13 @@ function OrionLib:MakeWindow(WindowConfig)
 				Name = "Glow",
 				Transparency = 0.8
 			}),
+			AddThemeObject(SetProps(MakeElement("Frame"), {
+				Size = UDim2.new(0, 3, 0, 0),
+				Position = UDim2.new(0, 2, 0.5, 0),
+				AnchorPoint = Vector2.new(0, 0.5),
+				Name = "Indicator",
+				BorderSizePixel = 0
+			}), "Accent"),
 			AddThemeObject(SetProps(MakeElement("Image", TabConfig.Icon), {
 				AnchorPoint = Vector2.new(0, 0.5),
 				Size = UDim2.new(0, 16, 0, 16),
@@ -825,6 +842,8 @@ function OrionLib:MakeWindow(WindowConfig)
 				Name = "Title"
 			}), "Text"),
 		}), "Second")
+		
+		TabFrame.Indicator.Visible = true -- Ensure it's ready for animation
 
 		if GetIcon(TabConfig.Icon) ~= nil then
 			TabFrame.Ico.Image = GetIcon(TabConfig.Icon)
@@ -848,18 +867,26 @@ function OrionLib:MakeWindow(WindowConfig)
 
 		AddConnection(TabFrame.MouseEnter, function()
 			if TabFrame.BackgroundTransparency ~= 0 or (TabFrame:FindFirstChild("Title") and TabFrame.Title.TextTransparency ~= 0) then
-				TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)}):Play()
+				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)}):Play()
+				TweenService:Create(TabFrame.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 38, 0, 0)}):Play()
+				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 14, 0.5, 0)}):Play()
 				if TabFrame:FindFirstChild("Glow") then
-					TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.4}):Play()
+					TweenService:Create(TabFrame.Glow, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0.4}):Play()
+				end
+				if not Container.Visible then
+					TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 14)}):Play()
 				end
 			end
 		end)
 
 		AddConnection(TabFrame.MouseLeave, function()
 			if not Container.Visible then
-				TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+				TweenService:Create(TabFrame.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 32, 0, 0)}):Play()
+				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 10, 0.5, 0)}):Play()
+				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 0)}):Play()
 				if TabFrame:FindFirstChild("Glow") then
-					TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.8}):Play()
+					TweenService:Create(TabFrame.Glow, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0.8}):Play()
 				end
 			end
 		end)
@@ -867,6 +894,9 @@ function OrionLib:MakeWindow(WindowConfig)
 		if FirstTab then
 			FirstTab = false
 			TabFrame.BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 15)
+			TabFrame.Indicator.Size = UDim2.new(0, 3, 0, 18)
+			TabFrame.Title.Position = UDim2.new(0, 38, 0, 0)
+			TabFrame.Ico.Position = UDim2.new(0, 14, 0.5, 0)
 			if TabFrame:FindFirstChild("Glow") then
 				TabFrame.Glow.Transparency = 0
 				TabFrame.Glow.Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent
@@ -885,14 +915,17 @@ function OrionLib:MakeWindow(WindowConfig)
 			for _, Tab in next, TabHolder:GetChildren() do
 				if Tab:IsA("TextButton") and Tab:FindFirstChild("Title") then
 					Tab.Title.Font = Enum.Font.GothamSemibold
-					TweenService:Create(Tab, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+					TweenService:Create(Tab, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+					TweenService:Create(Tab.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 32, 0, 0)}):Play()
+					TweenService:Create(Tab.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 10, 0.5, 0)}):Play()
+					TweenService:Create(Tab.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 0)}):Play()
 					if Tab:FindFirstChild("Glow") then
-						TweenService:Create(Tab.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.8, Color = OrionLib.Themes[OrionLib.SelectedTheme].Stroke}):Play()
+						TweenService:Create(Tab.Glow, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0.8, Color = OrionLib.Themes[OrionLib.SelectedTheme].Stroke}):Play()
 					end
 					if Tab:FindFirstChild("Ico") then
-						TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
+						TweenService:Create(Tab.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
 					end
-					TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
+					TweenService:Create(Tab.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
 				end    
 			end
 			for _, Child in next, MainWindow:GetChildren() do
@@ -900,15 +933,18 @@ function OrionLib:MakeWindow(WindowConfig)
 					Child.Visible = false
 				end    
 			end  
-			TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 15)}):Play()
+			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 15)}):Play()
+			TweenService:Create(TabFrame.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 38, 0, 0)}):Play()
+			TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 14, 0.5, 0)}):Play()
+			TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 18)}):Play()
 			if TabFrame:FindFirstChild("Glow") then
-				TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0, Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent}):Play()
+				TweenService:Create(TabFrame.Glow, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0, Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent}):Play()
 			end
 			if TabFrame:FindFirstChild("Ico") then
-				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
+				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
 			end
 			if TabFrame:FindFirstChild("Title") then
-				TweenService:Create(TabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+				TweenService:Create(TabFrame.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 				TabFrame.Title.Font = Enum.Font.GothamBlack
 			end
 			if Container then
@@ -1911,3 +1947,4 @@ function OrionLib:Destroy()
 end
 
 return OrionLib
+rionLib
