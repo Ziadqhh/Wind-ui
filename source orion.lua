@@ -494,13 +494,41 @@ function OrionLib:MakeWindow(WindowConfig)
 	end
 
 	local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 0), {
-		Size = UDim2.new(1, 0, 1, 0),
+		Size = UDim2.new(1, -145, 1, 0),
 		CanvasSize = UDim2.new(0, 0, 0, 0),
 		ScrollBarThickness = 0
 	}), {
 		SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8)}),
 		MakeElement("Padding", 0, 10, 10, 0)
 	}), "Divider")
+
+	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
+		Size = UDim2.new(0, 130, 0, 24),
+		Position = UDim2.new(1, -140, 0, 7),
+		BackgroundTransparency = 0.6
+	}), {
+		AddThemeObject(MakeElement("Stroke"), "Stroke"),
+		AddThemeObject(SetProps(Create("TextBox", {
+			Size = UDim2.new(1, -10, 1, 0),
+			Position = UDim2.new(0, 5, 0, 0),
+			BackgroundTransparency = 1,
+			Text = "",
+			PlaceholderText = "Search Tabs...",
+			Font = Enum.Font.Gotham,
+			TextSize = 12,
+			ClearTextOnFocus = false,
+			Name = "Box"
+		}), {}), "Text")
+	}), "Main")
+
+	AddConnection(TabSearch.Box:GetPropertyChangedSignal("Text"), function()
+		local Query = TabSearch.Box.Text:lower()
+		for _, Tab in next, TabHolder:GetChildren() do
+			if Tab:IsA("TextButton") then
+				Tab.Visible = Tab.Title.Text:lower():find(Query) ~= nil
+			end
+		end
+	end)
 
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 		TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X + 20, 0, 0)
@@ -537,6 +565,7 @@ function OrionLib:MakeWindow(WindowConfig)
 		Position = UDim2.new(0, 0, 0, 42)
 	}), {
 		TabHolder,
+		TabSearch,
 		AddThemeObject(SetProps(MakeElement("Frame"), {
 			Size = UDim2.new(1, 0, 0, 1),
 			Position = UDim2.new(0, 0, 1, -1)
