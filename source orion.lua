@@ -826,20 +826,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			}), "Text"),
 		}), "Second")
 
-		AddConnection(TabFrame.MouseEnter, function()
-			if TabFrame.BackgroundTransparency ~= 0 or TabFrame.Title.TextTransparency ~= 0 then
-				TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)}):Play()
-				TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.4}):Play()
-			end
-		end)
-
-		AddConnection(TabFrame.MouseLeave, function()
-			if not Container.Visible then
-				TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-				TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.8}):Play()
-			end
-		end)
-
 		if GetIcon(TabConfig.Icon) ~= nil then
 			TabFrame.Ico.Image = GetIcon(TabConfig.Icon)
 		end	
@@ -860,18 +846,42 @@ function OrionLib:MakeWindow(WindowConfig)
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
 		end)
 
+		AddConnection(TabFrame.MouseEnter, function()
+			if TabFrame.BackgroundTransparency ~= 0 or (TabFrame:FindFirstChild("Title") and TabFrame.Title.TextTransparency ~= 0) then
+				TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)}):Play()
+				if TabFrame:FindFirstChild("Glow") then
+					TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.4}):Play()
+				end
+			end
+		end)
+
+		AddConnection(TabFrame.MouseLeave, function()
+			if not Container.Visible then
+				TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+				if TabFrame:FindFirstChild("Glow") then
+					TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.8}):Play()
+				end
+			end
+		end)
+
 		if FirstTab then
 			FirstTab = false
 			TabFrame.BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 15)
-			TabFrame.Glow.Transparency = 0
-			TabFrame.Glow.Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent
-			TabFrame.Ico.ImageTransparency = 0
-			TabFrame.Title.TextTransparency = 0
-			TabFrame.Title.Font = Enum.Font.GothamBlack
+			if TabFrame:FindFirstChild("Glow") then
+				TabFrame.Glow.Transparency = 0
+				TabFrame.Glow.Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent
+			end
+			if TabFrame:FindFirstChild("Ico") then
+				TabFrame.Ico.ImageTransparency = 0
+			end
+			if TabFrame:FindFirstChild("Title") then
+				TabFrame.Title.TextTransparency = 0
+				TabFrame.Title.Font = Enum.Font.GothamBlack
+			end
 			Container.Visible = true
 		end    
 
-		AddConnection(TabFrame.MouseButton1Click, function()
+		AddConnection(TabFrame.MouseButton1Up, function()
 			for _, Tab in next, TabHolder:GetChildren() do
 				if Tab:IsA("TextButton") and Tab:FindFirstChild("Title") then
 					Tab.Title.Font = Enum.Font.GothamSemibold
@@ -1113,85 +1123,99 @@ function OrionLib:MakeWindow(WindowConfig)
 				SliderConfig.Default = SliderConfig.Default or 50
 				SliderConfig.Callback = SliderConfig.Callback or function() end
 				SliderConfig.ValueName = SliderConfig.ValueName or ""
-				SliderConfig.Color = SliderConfig.Color or Color3.fromRGB(9, 149, 98)
+				SliderConfig.Color = SliderConfig.Color or OrionLib.Themes[OrionLib.SelectedTheme].Accent
 				SliderConfig.Flag = SliderConfig.Flag or nil
 				SliderConfig.Save = SliderConfig.Save or false
 
 				local Slider = {Value = SliderConfig.Default, Save = SliderConfig.Save}
 				local Dragging = false
 
-				local SliderDrag = SetChildren(SetProps(MakeElement("RoundFrame", SliderConfig.Color, 0, 5), {
-					Size = UDim2.new(0, 0, 1, 0),
-					BackgroundTransparency = 0.3,
-					ClipsDescendants = true
+				local SliderBar = SetChildren(SetProps(MakeElement("Frame", OrionLib.Themes[OrionLib.SelectedTheme].Divider), {
+					Size = UDim2.new(1, -110, 0, 4),
+					Position = UDim2.new(0, 12, 0.5, 8),
+					AnchorPoint = Vector2.new(0, 0.5)
 				}), {
-					AddThemeObject(SetProps(MakeElement("Label", "value", 13), {
-						Size = UDim2.new(1, -12, 0, 14),
-						Position = UDim2.new(0, 12, 0, 6),
-						Font = Enum.Font.GothamBold,
-						Name = "Value",
-						TextTransparency = 0
-					}), "Text")
+					MakeElement("Corner", 1, 0),
+					SetChildren(SetProps(MakeElement("Frame", SliderConfig.Color), {
+						Size = UDim2.new(0, 0, 1, 0),
+						Name = "Fill"
+					}), {
+						MakeElement("Corner", 1, 0)
+					}),
+					SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 1, 0), {
+						Size = UDim2.new(0, 12, 0, 12),
+						AnchorPoint = Vector2.new(0.5, 0.5),
+						Position = UDim2.new(0, 0, 0.5, 0),
+						Name = "Knob"
+					}), {
+						SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Stroke, 2), {
+							Transparency = 0.5
+						})
+					})
 				})
 
-				local SliderBar = SetChildren(SetProps(MakeElement("RoundFrame", SliderConfig.Color, 0, 5), {
-					Size = UDim2.new(1, -24, 0, 26),
-					Position = UDim2.new(0, 12, 0, 30),
-					BackgroundTransparency = 0.9
-				}), {
-					SetProps(MakeElement("Stroke"), {
-						Color = SliderConfig.Color
-					}),
-					AddThemeObject(SetProps(MakeElement("Label", "value", 13), {
-						Size = UDim2.new(1, -12, 0, 14),
-						Position = UDim2.new(0, 12, 0, 6),
-						Font = Enum.Font.GothamBold,
-						Name = "Value",
-						TextTransparency = 0.8
-					}), "Text"),
-					SliderDrag
-				})
+				local ValueLabel = AddThemeObject(SetProps(MakeElement("Label", "0", 12), {
+					Size = UDim2.new(0, 80, 0, 20),
+					Position = UDim2.new(1, -90, 0.5, 8),
+					AnchorPoint = Vector2.new(0, 0.5),
+					TextXAlignment = Enum.TextXAlignment.Right,
+					Font = Enum.Font.GothamBold
+				}), "Text")
 
 				local SliderFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
-					Size = UDim2.new(1, 0, 0, 52),
+					Size = UDim2.new(1, 0, 0, 40),
 					Parent = ItemParent
 				}), {
-					AddThemeObject(SetProps(MakeElement("Label", SliderConfig.Name, 14), {
+					AddThemeObject(SetProps(MakeElement("Label", SliderConfig.Name, 13), {
 						Size = UDim2.new(1, -12, 0, 14),
-						Position = UDim2.new(0, 12, 0, 8),
+						Position = UDim2.new(0, 12, 0, 6),
 						Font = Enum.Font.GothamBold,
 						Name = "Content"
 					}), "Text"),
 					AddThemeObject(MakeElement("Stroke"), "Stroke"),
-					SliderBar
+					SliderBar,
+					ValueLabel
 				}), "Second")
 
-				SliderBar.InputBegan:Connect(function(Input)
-					if Input.UserInputType == Enum.UserInputType.MouseButton1 then 
-						Dragging = true 
-					end 
-				end)
-				SliderBar.InputEnded:Connect(function(Input) 
-					if Input.UserInputType == Enum.UserInputType.MouseButton1 then 
-						Dragging = false 
-					end 
+				local function UpdateSlider()
+					local Percentage = math.clamp((Slider.Value - SliderConfig.Min) / (SliderConfig.Max - SliderConfig.Min), 0, 1)
+					TweenService:Create(SliderBar.Fill, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(Percentage, 1)}):Play()
+					TweenService:Create(SliderBar.Knob, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(Percentage, 0.5)}):Play()
+					ValueLabel.Text = tostring(Slider.Value) .. " " .. SliderConfig.ValueName
+					SliderConfig.Callback(Slider.Value)
+				end
+
+				local function Move(Input)
+					local SizeScale = math.clamp((Input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
+					local RawValue = SliderConfig.Min + ((SliderConfig.Max - SliderConfig.Min) * SizeScale)
+					Slider.Value = math.clamp(Round(RawValue, SliderConfig.Increment), SliderConfig.Min, SliderConfig.Max)
+					UpdateSlider()
+					SaveCfg(game.GameId)
+				end
+
+				AddConnection(SliderFrame.InputBegan, function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+						Dragging = true
+						Move(Input)
+					end
 				end)
 
-				UserInputService.InputChanged:Connect(function(Input)
-					if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then 
-						local SizeScale = math.clamp((Input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
-						Slider:Set(SliderConfig.Min + ((SliderConfig.Max - SliderConfig.Min) * SizeScale)) 
-						SaveCfg(game.GameId)
+				AddConnection(UserInputService.InputChanged, function(Input)
+					if Dragging and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+						Move(Input)
+					end
+				end)
+
+				AddConnection(UserInputService.InputEnded, function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+						Dragging = false
 					end
 				end)
 
 				function Slider:Set(Value)
-					self.Value = math.clamp(Round(Value, SliderConfig.Increment), SliderConfig.Min, SliderConfig.Max)
-					TweenService:Create(SliderDrag,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = UDim2.fromScale((self.Value - SliderConfig.Min) / (SliderConfig.Max - SliderConfig.Min), 1)}):Play()
-					SliderBar.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
-					SliderDrag.Value.Text = tostring(self.Value) .. " " .. SliderConfig.ValueName
-					SliderConfig.Callback(self.Value)
-				end      
+					Slider.Value = math.clamp(Round(Value, SliderConfig.Increment), SliderConfig.Min, SliderConfig.Max)
+					UpdateSlider()
+				end
 
 				Slider:Set(Slider.Value)
 				if SliderConfig.Flag then				
