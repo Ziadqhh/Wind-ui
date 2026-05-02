@@ -534,6 +534,13 @@ function OrionLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(0, 150, 1, -50),
 		Position = UDim2.new(0, 0, 0, 50)
 	}), {
+		Create("UIGradient", {
+			Rotation = 0,
+			Transparency = NumberSequence.new({
+				NumberSequenceKeypoint.new(0, 0),
+				NumberSequenceKeypoint.new(1, 0.05)
+			})
+		}),
 		AddThemeObject(SetProps(MakeElement("Frame"), {
 			Size = UDim2.new(1, 0, 0, 10),
 			Position = UDim2.new(0, 0, 0, 0)
@@ -590,10 +597,10 @@ function OrionLib:MakeWindow(WindowConfig)
 	}), "Second")
 
 	local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
-		Size = UDim2.new(1, -30, 2, 0),
-		Position = UDim2.new(0, 25, 0, -24),
+		Size = UDim2.new(1, -30, 1, 0),
+		Position = UDim2.new(0, 20, 0, 0),
 		Font = Enum.Font.GothamBlack,
-		TextSize = 20
+		TextSize = 17
 	}), "Accent")
 
 	local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
@@ -607,16 +614,34 @@ function OrionLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(0, 615, 0, 344),
 		ClipsDescendants = true
 	}), {
+		Create("UIGradient", {
+			Rotation = 90,
+			Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(230, 230, 230))
+			})
+		}),
 		AddThemeObject(MakeElement("Stroke", nil, 1.5), "Stroke"),
-		SetChildren(SetProps(MakeElement("TFrame"), {
-			Size = UDim2.new(1, 0, 0, 50),
+		AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 12), {
+			Size = UDim2.new(1, 0, 0, 42),
 			Name = "TopBar"
 		}), {
+			AddThemeObject(SetProps(MakeElement("Frame"), {
+				Size = UDim2.new(1, 0, 0, 10),
+				Position = UDim2.new(0, 0, 1, -10),
+				BorderSizePixel = 0
+			}), "Second"),
 			WindowName,
-			WindowTopBarLine,
-			AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
-				Size = UDim2.new(0, 70, 0, 30),
-				Position = UDim2.new(1, -90, 0, 10)
+			Create("UIGradient", {
+				Rotation = 90,
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 220))
+				})
+			}),
+			AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
+				Size = UDim2.new(0, 64, 0, 26),
+				Position = UDim2.new(1, -80, 0, 8)
 			}), {
 				AddThemeObject(MakeElement("Stroke"), "Stroke"),
 				AddThemeObject(SetProps(MakeElement("Frame"), {
@@ -625,8 +650,8 @@ function OrionLib:MakeWindow(WindowConfig)
 				}), "Stroke"), 
 				CloseBtn,
 				MinimizeBtn
-			}), "Second"), 
-		}),
+			}), "Main"), 
+		}), "Second"),
 		DragPoint,
 		WindowStuff
 	}), "Main")
@@ -724,9 +749,11 @@ function OrionLib:MakeWindow(WindowConfig)
 		TabConfig.PremiumOnly = TabConfig.PremiumOnly or false
 
 		local TabFrame = SetChildren(SetProps(MakeElement("Button"), {
-			Size = UDim2.new(1, 0, 0, 30),
+			Size = UDim2.new(1, -10, 0, 32),
+			Position = UDim2.new(0, 5, 0, 0),
 			Parent = TabHolder
 		}), {
+			MakeElement("Corner", 0, 8),
 			AddThemeObject(SetProps(MakeElement("Image", TabConfig.Icon), {
 				AnchorPoint = Vector2.new(0, 0.5),
 				Size = UDim2.new(0, 18, 0, 18),
