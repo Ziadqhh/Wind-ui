@@ -35,6 +35,11 @@ local Success, Response = pcall(function()
 	Icons = HttpService:JSONDecode(game:HttpGetAsync("https://raw.githubusercontent.com/evoincorp/lucideblox/master/src/modules/util/icons.json")).icons
 end)
 
+local IconPack = {}
+pcall(function()
+	IconPack = loadstring(game:HttpGet("https://raw.githubusercontent.com/Ziadqhh/Wind-ui/refs/heads/main/icon%20pack.lua"))() or {}
+end)
+
 if not Success then
 	warn("\nOrion Library - Failed to load Feather Icons. Error code: " .. Response .. "\n")
 end	
@@ -42,6 +47,8 @@ end
 local function GetIcon(IconName)
 	if Icons[IconName] ~= nil then
 		return Icons[IconName]
+	elseif IconPack[IconName] ~= nil then
+		return IconPack[IconName]
 	else
 		return nil
 	end
@@ -632,7 +639,7 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowStuff
 	}), "Main")
 
-	local ResizeBtn = SetProps(MakeElement("ImageButton", "rbxassetid://10747373024"), {
+	local ResizeBtn = SetProps(MakeElement("ImageButton", GetIcon("scaling") or "rbxassetid://10747373024"), {
 		Parent = MainWindow,
 		Size = UDim2.new(0, 16, 0, 16),
 		Position = UDim2.new(1, -2, 1, -2),
