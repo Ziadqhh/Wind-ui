@@ -1130,9 +1130,26 @@ function OrionLib:MakeWindow(WindowConfig)
 				local Slider = {Value = SliderConfig.Default, Save = SliderConfig.Save}
 				local Dragging = false
 
+				local ValueBadge = SetChildren(SetProps(MakeElement("RoundFrame", OrionLib.Themes[OrionLib.SelectedTheme].Divider, 0, 4), {
+					Size = UDim2.new(0, 0, 0, 18),
+					Position = UDim2.new(1, -12, 0, 8),
+					AnchorPoint = Vector2.new(1, 0),
+					AutomaticSize = Enum.AutomaticSize.X,
+					BackgroundTransparency = 0.5
+				}), {
+					SetProps(MakeElement("Padding", 0, 6, 6, 0), {}),
+					SetProps(MakeElement("Label", "0", 11), {
+						Size = UDim2.new(0, 0, 1, 0),
+						AutomaticSize = Enum.AutomaticSize.X,
+						Font = Enum.Font.GothamBold,
+						TextColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Accent,
+						Name = "Val"
+					})
+				})
+
 				local SliderBar = SetChildren(SetProps(MakeElement("Frame", OrionLib.Themes[OrionLib.SelectedTheme].Divider), {
-					Size = UDim2.new(1, -110, 0, 4),
-					Position = UDim2.new(0, 12, 0.5, 8),
+					Size = UDim2.new(1, -24, 0, 4),
+					Position = UDim2.new(0, 12, 0, 32),
 					AnchorPoint = Vector2.new(0, 0.5)
 				}), {
 					MakeElement("Corner", 1, 0),
@@ -1143,45 +1160,37 @@ function OrionLib:MakeWindow(WindowConfig)
 						MakeElement("Corner", 1, 0)
 					}),
 					SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 1, 0), {
-						Size = UDim2.new(0, 12, 0, 12),
+						Size = UDim2.new(0, 10, 0, 10),
 						AnchorPoint = Vector2.new(0.5, 0.5),
 						Position = UDim2.new(0, 0, 0.5, 0),
 						Name = "Knob"
 					}), {
 						SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Stroke, 2), {
-							Transparency = 0.5
+							Transparency = 0.4
 						})
 					})
 				})
 
-				local ValueLabel = AddThemeObject(SetProps(MakeElement("Label", "0", 12), {
-					Size = UDim2.new(0, 80, 0, 20),
-					Position = UDim2.new(1, -90, 0.5, 8),
-					AnchorPoint = Vector2.new(0, 0.5),
-					TextXAlignment = Enum.TextXAlignment.Right,
-					Font = Enum.Font.GothamBold
-				}), "Text")
-
 				local SliderFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
-					Size = UDim2.new(1, 0, 0, 40),
+					Size = UDim2.new(1, 0, 0, 44),
 					Parent = ItemParent
 				}), {
 					AddThemeObject(SetProps(MakeElement("Label", SliderConfig.Name, 13), {
-						Size = UDim2.new(1, -12, 0, 14),
-						Position = UDim2.new(0, 12, 0, 6),
+						Size = UDim2.new(1, -100, 0, 18),
+						Position = UDim2.new(0, 12, 0, 8),
 						Font = Enum.Font.GothamBold,
-						Name = "Content"
+						Name = "Title"
 					}), "Text"),
 					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					SliderBar,
-					ValueLabel
+					ValueBadge
 				}), "Second")
 
 				local function UpdateSlider()
 					local Percentage = math.clamp((Slider.Value - SliderConfig.Min) / (SliderConfig.Max - SliderConfig.Min), 0, 1)
-					TweenService:Create(SliderBar.Fill, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(Percentage, 1)}):Play()
-					TweenService:Create(SliderBar.Knob, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(Percentage, 0.5)}):Play()
-					ValueLabel.Text = tostring(Slider.Value) .. " " .. SliderConfig.ValueName
+					TweenService:Create(SliderBar.Fill, TweenInfo.new(0.12, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(Percentage, 1)}):Play()
+					TweenService:Create(SliderBar.Knob, TweenInfo.new(0.12, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(Percentage, 0.5)}):Play()
+					ValueBadge.Val.Text = tostring(Slider.Value) .. " " .. SliderConfig.ValueName
 					SliderConfig.Callback(Slider.Value)
 				end
 
@@ -1197,6 +1206,7 @@ function OrionLib:MakeWindow(WindowConfig)
 					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 						Dragging = true
 						Move(Input)
+						TweenService:Create(SliderBar.Knob, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 14, 0, 14)}):Play()
 					end
 				end)
 
@@ -1209,6 +1219,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				AddConnection(UserInputService.InputEnded, function(Input)
 					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 						Dragging = false
+						TweenService:Create(SliderBar.Knob, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 10, 0, 10)}):Play()
 					end
 				end)
 
