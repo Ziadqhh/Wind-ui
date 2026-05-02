@@ -524,7 +524,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	AddConnection(TabSearch.Box:GetPropertyChangedSignal("Text"), function()
 		local Query = TabSearch.Box.Text:lower()
 		for _, Tab in next, TabHolder:GetChildren() do
-			if Tab:IsA("TextButton") then
+			if Tab:IsA("TextButton") and Tab:FindFirstChild("Title") then
 				Tab.Visible = Tab.Title.Text:lower():find(Query) ~= nil
 			end
 		end
@@ -572,10 +572,12 @@ function OrionLib:MakeWindow(WindowConfig)
 		}), "Stroke"),
 	}), "Second")
 	local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
-		Size = UDim2.new(1, -30, 1, 0),
+		Size = UDim2.new(0, 0, 1, 0),
+		AutomaticSize = Enum.AutomaticSize.X,
 		Position = UDim2.new(0, 20, 0, 0),
 		Font = Enum.Font.GothamBlack,
-		TextSize = 17
+		TextSize = 17,
+		Name = "TitleLabel"
 	}), "Accent")
 
 	local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
@@ -608,8 +610,8 @@ function OrionLib:MakeWindow(WindowConfig)
 			}), "Second"),
 			WindowName,
 			SetChildren(SetProps(MakeElement("TFrame"), {
-				Size = UDim2.new(1, -160, 1, 0),
-				Position = UDim2.new(0, 150, 0, 0),
+				Size = UDim2.new(1, -250, 1, 0),
+				Position = UDim2.new(0, 160, 0, 0),
 				Name = "CustomItems"
 			}), {
 				SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Horizontal, VerticalAlignment = Enum.VerticalAlignment.Center, Padding = UDim.new(0, 10)})
@@ -725,31 +727,39 @@ function OrionLib:MakeWindow(WindowConfig)
 
 	local TabFunction = {}
 
-	function TabFunction:AddTopLabel(Text)
-		local Label = AddThemeObject(SetProps(MakeElement("Label", Text, 13), {
+	function TabFunction:AddTopLabel(Config)
+		Config = type(Config) == "string" and {Text = Config} or Config
+		Config.Text = Config.Text or "Label"
+		Config.Color = Config.Color or OrionLib.Themes[OrionLib.SelectedTheme].Text
+		
+		local Label = SetProps(MakeElement("Label", Config.Text, 13), {
 			Parent = MainWindow.TopBar.CustomItems,
 			Size = UDim2.new(0, 0, 1, 0),
 			AutomaticSize = Enum.AutomaticSize.X,
-			Font = Enum.Font.GothamSemibold
-		}), "Text")
+			Font = Enum.Font.GothamSemibold,
+			TextColor3 = Config.Color
+		})
 		
 		local LabelFunc = {}
-		function LabelFunc:Set(NewText)
-			Label.Text = NewText
-		end
+		function LabelFunc:Set(NewText) Label.Text = NewText end
+		function LabelFunc:SetColor(NewColor) Label.TextColor3 = NewColor end
 		return LabelFunc
 	end
 
-	function TabFunction:AddTopIcon(IconID)
-		local Icon = AddThemeObject(SetProps(MakeElement("Image", IconID), {
+	function TabFunction:AddTopIcon(Config)
+		Config = type(Config) == "string" and {Icon = Config} or Config
+		Config.Icon = Config.Icon or ""
+		Config.Color = Config.Color or OrionLib.Themes[OrionLib.SelectedTheme].Text
+		
+		local Icon = SetProps(MakeElement("Image", Config.Icon), {
 			Parent = MainWindow.TopBar.CustomItems,
 			Size = UDim2.new(0, 20, 0, 20),
-		}), "Text")
+			ImageColor3 = Config.Color
+		})
 		
 		local IconFunc = {}
-		function IconFunc:Set(NewIcon)
-			Icon.Image = GetIcon(NewIcon) or NewIcon
-		end
+		function IconFunc:Set(NewIcon) Icon.Image = GetIcon(NewIcon) or NewIcon end
+		function IconFunc:SetColor(NewColor) Icon.ImageColor3 = NewColor end
 		return IconFunc
 	end
 
@@ -757,26 +767,40 @@ function OrionLib:MakeWindow(WindowConfig)
 		Config = Config or {}
 		Config.Name = Config.Name or "Button"
 		Config.Callback = Config.Callback or function() end
+		Config.BgColor = Config.BgColor or OrionLib.Themes[OrionLib.SelectedTheme].Main
+		Config.TextColor = Config.TextColor or OrionLib.Themes[OrionLib.SelectedTheme].Text
+		Config.GlowColor = Config.GlowColor or OrionLib.Themes[OrionLib.SelectedTheme].Accent
 
-		local TopBtn = AddThemeObject(SetChildren(SetProps(MakeElement("Button"), {
+		local TopBtn = SetChildren(SetProps(MakeElement("Button"), {
 			Parent = MainWindow.TopBar.CustomItems,
 			Size = UDim2.new(0, 0, 0, 24),
 			AutomaticSize = Enum.AutomaticSize.X,
-			BackgroundTransparency = 0
+			BackgroundTransparency = 0,
+			BackgroundColor3 = Config.BgColor
 		}), {
 			MakeElement("Corner", 0, 6),
-			AddThemeObject(SetProps(MakeElement("Label", Config.Name, 12), {
+			SetProps(MakeElement("Stroke", Config.GlowColor, 1.2), {
+				Name = "Glow",
+				Transparency = 0.5
+			}),
+			SetProps(MakeElement("Label", Config.Name, 12), {
 				Size = UDim2.new(0, 0, 1, 0),
 				AutomaticSize = Enum.AutomaticSize.X,
 				Position = UDim2.new(0, 8, 0, 0),
-				Font = Enum.Font.GothamBold
-			}), "Text"),
+				Font = Enum.Font.GothamBold,
+				TextColor3 = Config.TextColor
+			}),
 			SetProps(MakeElement("Padding", 0, 0, 16, 0), {})
-		}), "Main")
+		})
 
 		AddConnection(TopBtn.MouseButton1Click, function()
 			Config.Callback()
 		end)
+		
+		local BtnFunc = {}
+		function BtnFunc:SetText(NewText) TopBtn.TextLabel.Text = NewText end
+		function BtnFunc:SetColor(NewColor) TopBtn.BackgroundColor3 = NewColor end
+		return BtnFunc
 	end
 
 	function TabFunction:MakeTab(TabConfig)
@@ -857,25 +881,37 @@ function OrionLib:MakeWindow(WindowConfig)
 
 		AddConnection(TabFrame.MouseButton1Click, function()
 			for _, Tab in next, TabHolder:GetChildren() do
-				if Tab:IsA("TextButton") then
+				if Tab:IsA("TextButton") and Tab:FindFirstChild("Title") then
 					Tab.Title.Font = Enum.Font.GothamSemibold
 					TweenService:Create(Tab, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-					TweenService:Create(Tab.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.8, Color = OrionLib.Themes[OrionLib.SelectedTheme].Stroke}):Play()
-					TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
+					if Tab:FindFirstChild("Glow") then
+						TweenService:Create(Tab.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0.8, Color = OrionLib.Themes[OrionLib.SelectedTheme].Stroke}):Play()
+					end
+					if Tab:FindFirstChild("Ico") then
+						TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
+					end
 					TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
 				end    
 			end
-			for _, ItemContainer in next, MainWindow:GetChildren() do
-				if ItemContainer.Name == "ItemContainer" then
-					ItemContainer.Visible = false
+			for _, Child in next, MainWindow:GetChildren() do
+				if Child.Name == "ItemContainer" and Child:IsA("ScrollingFrame") then
+					Child.Visible = false
 				end    
 			end  
 			TweenService:Create(TabFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 15, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 15)}):Play()
-			TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0, Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent}):Play()
-			TweenService:Create(TabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
-			TweenService:Create(TabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-			TabFrame.Title.Font = Enum.Font.GothamBlack
-			Container.Visible = true   
+			if TabFrame:FindFirstChild("Glow") then
+				TweenService:Create(TabFrame.Glow, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Transparency = 0, Color = OrionLib.Themes[OrionLib.SelectedTheme].Accent}):Play()
+			end
+			if TabFrame:FindFirstChild("Ico") then
+				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
+			end
+			if TabFrame:FindFirstChild("Title") then
+				TweenService:Create(TabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+				TabFrame.Title.Font = Enum.Font.GothamBlack
+			end
+			if Container then
+				Container.Visible = true
+			end
 		end)
 
 		local function GetElements(ItemParent)
