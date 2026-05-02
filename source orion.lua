@@ -1408,6 +1408,10 @@ function OrionLib:MakeWindow(Config)
 		SetProps(MakeElement("Padding", 10, 12, 12, 10), {Name = "UIPadding"})
 	})
 
+	AddConnection(SettingsOverlay.Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+		SettingsOverlay.Container.CanvasSize = UDim2.new(0, 0, 0, SettingsOverlay.Container.UIListLayout.AbsoluteContentSize.Y + 40)
+	end)
+
 	local MainWindow -- Forward declaration
 	local CurrentTabContainer = nil
 
@@ -1761,9 +1765,19 @@ function OrionLib:MakeWindow(Config)
 			Increment = 1,
 			ValueName = "%",
 			Callback = function(Value)
-				MainWindow.BackgroundTransparency = Value / 100
-				MainWindow.TopBar.BackgroundTransparency = Value / 100
-				WindowStuff.BackgroundTransparency = Value / 100
+				local T = Value / 100
+				MainWindow.BackgroundTransparency = T
+				MainWindow.TopBar.BackgroundTransparency = T
+				WindowStuff.BackgroundTransparency = T
+				SettingsOverlay.BackgroundTransparency = T
+				TabHolder.BackgroundTransparency = T
+				TabSearch.BackgroundTransparency = math.max(T, 0.7) -- Keep search slightly visible
+				
+				for _, Child in next, MainWindow:GetChildren() do
+					if Child.Name == "ItemContainer" then
+						Child.BackgroundTransparency = 1 -- Keep containers transparent
+					end
+				end
 			end
 		})
 
