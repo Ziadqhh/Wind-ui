@@ -592,17 +592,8 @@ function OrionLib:MakeWindow(WindowConfig)
 		Parent = Orion,
 		Position = UDim2.new(0.5, -WindowConfig.Size.X.Offset / 2, 0.5, -WindowConfig.Size.Y.Offset / 2),
 		Size = WindowConfig.Size,
-		ClipsDescendants = false
+		ClipsDescendants = true
 	}), {
-		AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://6015667343"), {
-			Size = UDim2.new(1, 120, 1, 120),
-			Position = UDim2.new(0.5, 0, 0.5, 0),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			ImageTransparency = 0.5,
-			BackgroundTransparency = 1,
-			Name = "Glow",
-			ZIndex = -1
-		}), "Accent"),
 		SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Stroke, 1), {
 			Transparency = 0.2
 		}),
@@ -640,6 +631,45 @@ function OrionLib:MakeWindow(WindowConfig)
 		DragPoint,
 		WindowStuff
 	}), "Main")
+
+	local ResizeBtn = SetProps(MakeElement("ImageButton", "rbxassetid://10747373024"), {
+		Parent = MainWindow,
+		Size = UDim2.new(0, 16, 0, 16),
+		Position = UDim2.new(1, -2, 1, -2),
+		AnchorPoint = Vector2.new(1, 1),
+		ImageTransparency = 0.5,
+		ZIndex = 10,
+		Name = "ResizeHandle"
+	})
+
+	local Resizing = false
+	local ResizeStartPos = nil
+	local StartSize = nil
+
+	AddConnection(ResizeBtn.InputBegan, function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+			Resizing = true
+			ResizeStartPos = Input.Position
+			StartSize = MainWindow.Size
+		end
+	end)
+
+	AddConnection(UserInputService.InputChanged, function(Input)
+		if Resizing and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+			local Delta = Input.Position - ResizeStartPos
+			local NewWidth = math.max(400, StartSize.X.Offset + Delta.X)
+			local NewHeight = math.max(250, StartSize.Y.Offset + Delta.Y)
+			
+			WindowConfig.Size = UDim2.new(0, NewWidth, 0, NewHeight)
+			MainWindow.Size = WindowConfig.Size
+		end
+	end)
+
+	AddConnection(UserInputService.InputEnded, function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+			Resizing = false
+		end
+	end)
 
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
@@ -1026,40 +1056,45 @@ function OrionLib:MakeWindow(WindowConfig)
 				})
 
 				local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-					Size = UDim2.new(1, 0, 0, 28),
+					Size = UDim2.new(1, 0, 0, 34),
 					Parent = ItemParent
 				}), {
-					AddThemeObject(SetProps(MakeElement("Label", ButtonConfig.Name, 14), {
-						Size = UDim2.new(1, -12, 1, 0),
-						Position = UDim2.new(0, 12, 0, 0),
-						Font = Enum.Font.GothamBold,
-						Name = "Content"
-					}), "Text"),
 					AddThemeObject(SetProps(MakeElement("Image", ButtonConfig.Icon), {
 						Size = UDim2.new(0, 18, 0, 18),
-						Position = UDim2.new(1, -28, 0, 5),
-					}), "TextDark"),
+						Position = UDim2.new(0, 10, 0.5, 0),
+						AnchorPoint = Vector2.new(0, 0.5),
+						ImageTransparency = 0.2,
+						Name = "Ico"
+					}), "Text"),
+					AddThemeObject(SetProps(MakeElement("Label", ButtonConfig.Name, 14), {
+						Size = UDim2.new(1, -40, 1, 0),
+						Position = UDim2.new(0, 36, 0, 0),
+						Font = Enum.Font.GothamSemibold,
+						Name = "Content"
+					}), "Text"),
 					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					Click
 				}), "Second")
 
 				AddConnection(Click.MouseEnter, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 5, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 5, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 5)}):Play()
+					TweenService:Create(ButtonFrame.Content, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 40, 0, 0)}):Play()
 				end)
 
 				AddConnection(Click.MouseLeave, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-				end)
-
-				AddConnection(Click.MouseButton1Up, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-					spawn(function()
-						ButtonConfig.Callback()
-					end)
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+					TweenService:Create(ButtonFrame.Content, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 36, 0, 0)}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Down, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)}):Play()
+				end)
+
+				AddConnection(Click.MouseButton1Up, function()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 5, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 5, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 5)}):Play()
+					spawn(function()
+						ButtonConfig.Callback()
+					end)
 				end)
 
 				function Button:Set(ButtonText)
@@ -1083,33 +1118,34 @@ function OrionLib:MakeWindow(WindowConfig)
 					Size = UDim2.new(1, 0, 1, 0)
 				})
 
-				local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", ToggleConfig.Color, 0, 4), {
-					Size = UDim2.new(0, 24, 0, 24),
-					Position = UDim2.new(1, -24, 0.5, 0),
-					AnchorPoint = Vector2.new(0.5, 0.5)
+				local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", OrionLib.Themes.Default.Divider, 1, 0), {
+					Size = UDim2.new(0, 36, 0, 20),
+					Position = UDim2.new(1, -12, 0.5, 0),
+					AnchorPoint = Vector2.new(1, 0.5)
 				}), {
 					SetProps(MakeElement("Stroke"), {
-						Color = ToggleConfig.Color,
+						Color = OrionLib.Themes.Default.Stroke,
 						Name = "Stroke",
 						Transparency = 0.5
 					}),
-					SetProps(MakeElement("Image", "rbxassetid://3944680095"), {
-						Size = UDim2.new(0, 20, 0, 20),
-						AnchorPoint = Vector2.new(0.5, 0.5),
-						Position = UDim2.new(0.5, 0, 0.5, 0),
-						ImageColor3 = Color3.fromRGB(255, 255, 255),
-						Name = "Ico"
-					}),
+					SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 1, 0), {
+						Size = UDim2.new(0, 14, 0, 14),
+						AnchorPoint = Vector2.new(0, 0.5),
+						Position = UDim2.new(0, 3, 0.5, 0),
+						Name = "Knob"
+					}), {
+						MakeElement("Corner", 1, 0)
+					})
 				})
 
 				local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-					Size = UDim2.new(1, 0, 0, 32),
+					Size = UDim2.new(1, 0, 0, 34),
 					Parent = ItemParent
 				}), {
 					AddThemeObject(SetProps(MakeElement("Label", ToggleConfig.Name, 14), {
 						Size = UDim2.new(1, -12, 1, 0),
 						Position = UDim2.new(0, 12, 0, 0),
-						Font = Enum.Font.GothamBold,
+						Font = Enum.Font.GothamSemibold,
 						Name = "Content"
 					}), "Text"),
 					AddThemeObject(MakeElement("Stroke"), "Stroke"),
@@ -1119,30 +1155,25 @@ function OrionLib:MakeWindow(WindowConfig)
 
 				function Toggle:Set(Value)
 					Toggle.Value = Value
-					TweenService:Create(ToggleBox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Divider}):Play()
-					TweenService:Create(ToggleBox.Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Color = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Stroke}):Play()
-					TweenService:Create(ToggleBox.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1, Size = Toggle.Value and UDim2.new(0, 20, 0, 20) or UDim2.new(0, 8, 0, 8)}):Play()
+					TweenService:Create(ToggleBox, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Divider}):Play()
+					TweenService:Create(ToggleBox.Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Color = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Stroke}):Play()
+					TweenService:Create(ToggleBox.Knob, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = Toggle.Value and UDim2.new(1, -17, 0.5, 0) or UDim2.new(0, 3, 0.5, 0)}):Play()
 					ToggleConfig.Callback(Toggle.Value)
 				end    
 
 				Toggle:Set(Toggle.Value)
 
 				AddConnection(Click.MouseEnter, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(ToggleFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 5, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 5, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 5)}):Play()
 				end)
 
 				AddConnection(Click.MouseLeave, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+					TweenService:Create(ToggleFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Up, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 					SaveCfg(game.GameId)
 					Toggle:Set(not Toggle.Value)
-				end)
-
-				AddConnection(Click.MouseButton1Down, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
 
 				if ToggleConfig.Flag then
@@ -1820,26 +1851,32 @@ function OrionLib:MakeWindow(WindowConfig)
 			SectionConfig.Name = SectionConfig.Name or "Section"
 
 			local SectionFrame = SetChildren(SetProps(MakeElement("TFrame"), {
-				Size = UDim2.new(1, 0, 0, 26),
+				Size = UDim2.new(1, 0, 0, 30),
 				Parent = Container
 			}), {
-				AddThemeObject(SetProps(MakeElement("Label", SectionConfig.Name, 14), {
-					Size = UDim2.new(1, -12, 0, 16),
-					Position = UDim2.new(0, 0, 0, 3),
-					Font = Enum.Font.GothamSemibold
+				AddThemeObject(SetProps(MakeElement("Label", SectionConfig.Name:upper(), 12), {
+					Size = UDim2.new(1, -12, 0, 20),
+					Position = UDim2.new(0, 5, 0, 5),
+					Font = Enum.Font.GothamBold,
+					TextTransparency = 0.3
 				}), "TextDark"),
+				AddThemeObject(SetProps(MakeElement("Frame"), {
+					Size = UDim2.new(0, 2, 0, 14),
+					Position = UDim2.new(0, 0, 0, 8),
+					BorderSizePixel = 0
+				}), "Accent"),
 				SetChildren(SetProps(MakeElement("TFrame"), {
 					AnchorPoint = Vector2.new(0, 0),
-					Size = UDim2.new(1, 0, 1, -24),
-					Position = UDim2.new(0, 0, 0, 23),
+					Size = UDim2.new(1, 0, 1, -28),
+					Position = UDim2.new(0, 0, 0, 26),
 					Name = "Holder"
 				}), {
-					MakeElement("List", 0, 6)
+					MakeElement("List", 0, 8)
 				}),
 			})
 
 			AddConnection(SectionFrame.Holder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-				SectionFrame.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y + 31)
+				SectionFrame.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y + 35)
 				SectionFrame.Holder.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y)
 			end)
 
