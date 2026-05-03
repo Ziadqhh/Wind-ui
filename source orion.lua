@@ -1396,11 +1396,14 @@ function OrionLib:MakeWindow(Config)
 		Position = UDim2.new(0, 0, 0, 42),
 		Visible = false,
 		ZIndex = 100,
-		Name = "SettingsOverlay"
+		Name = "SettingsOverlay",
+		BackgroundTransparency = 0
 	}), {
 		SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
 			Size = UDim2.new(1, 0, 1, 0),
-			Name = "Container"
+			Name = "Container",
+			AutomaticCanvasSize = Enum.AutomaticSize.Y,
+			ZIndex = 101
 		}),
 	}), "Main")
 	SetChildren(SettingsOverlay.Container, {
@@ -1707,23 +1710,42 @@ function OrionLib:MakeWindow(Config)
 		local TabReturn = GetElements(SettingsOverlay.Container, MainWindow, WindowStuff, SettingsOverlay, ToggleSettings)
 
 		local Player = game:GetService("Players").LocalPlayer
-		local ProfileFrame = AddThemeObject(SetChildren(SetProps(MakeElement("TFrame"), {
+		
+		local function UpdateCanvasSize()
+			task.wait()
+			SettingsOverlay.Container.CanvasSize = UDim2.new(0, 0, 0, SettingsOverlay.Container.UIListLayout.AbsoluteContentSize.Y + 40)
+		end
+		
+		local ProfileFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
 			Size = UDim2.new(1, 0, 0, 160),
-			Parent = SettingsOverlay.Container
+			Parent = SettingsOverlay.Container,
+			BackgroundTransparency = 0,
+			Name = "ProfileFrame"
 		}), {
 			SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 1, 0), {
 				Size = UDim2.new(0, 90, 0, 90),
 				Position = UDim2.new(0.5, 0, 0, 20),
 				AnchorPoint = Vector2.new(0.5, 0),
 				ClipsDescendants = true,
-				Name = "AvatarHolder"
+				Name = "AvatarHolder",
+				BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 			}), {
-				SetProps(Create("ImageLabel", {
-					Size = UDim2.new(1, 0, 1, 0),
-					Image = game:GetService("Players"):GetUserThumbnailAsync(Player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420),
-					BackgroundTransparency = 1,
-					Name = "Avatar"
-				}), {})
+				(function()
+					local AvatarImage = Create("ImageLabel", {
+						Size = UDim2.new(1, 0, 1, 0),
+						BackgroundTransparency = 1,
+						Name = "Avatar"
+					})
+					local success, result = pcall(function()
+						return game:GetService("Players"):GetUserThumbnailAsync(Player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+					end)
+					if success and result then
+						AvatarImage.Image = result
+					else
+						AvatarImage.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+					end
+					return AvatarImage
+				end)()
 			}),
 			AddThemeObject(SetProps(MakeElement("Label", Player.DisplayName, 22), {
 				Size = UDim2.new(1, 0, 0, 28),
@@ -1741,7 +1763,9 @@ function OrionLib:MakeWindow(Config)
 				TextXAlignment = Enum.TextXAlignment.Center,
 				Name = "Username"
 			}), "TextDark")
-		}), "Main")
+		}), "Second")
+		
+		task.spawn(UpdateCanvasSize)
 
 		local ThemeList = {}
 		for i, v in pairs(OrionLib.Themes) do table.insert(ThemeList, i) end
