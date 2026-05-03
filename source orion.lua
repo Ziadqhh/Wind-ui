@@ -927,13 +927,13 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 		})
 
 		local DropdownBox = SetChildren(SetProps(MakeElement("RoundFrame", OrionLib.Themes.Default.Divider, 1, 0), {
-			Size = UDim2.new(0, 0, 0, 24),
+			Size = UDim2.new(0, 0, 0, 22),
 			Position = UDim2.new(1, -12, 0, 5),
 			AnchorPoint = Vector2.new(1, 0),
 			AutomaticSize = Enum.AutomaticSize.X
 		}), {
 			SetProps(MakeElement("Padding", 0, 8, 8, 0), {}),
-			SetProps(MakeElement("Label", Dropdown.Value ~= "" and Dropdown.Value or "...", 13), {
+			SetProps(MakeElement("Label", Dropdown.Value ~= "" and Dropdown.Value or "...", 12), {
 				Size = UDim2.new(0, 0, 1, 0),
 				AutomaticSize = Enum.AutomaticSize.X,
 				Font = Enum.Font.GothamSemibold,
@@ -944,21 +944,22 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 
 		local DropdownContainer = SetChildren(SetProps(MakeElement("TFrame"), {
 			Size = UDim2.new(1, 0, 0, 0),
-			Position = UDim2.new(0, 0, 0, 38),
+			Position = UDim2.new(0, 0, 0, 32),
 			Visible = false,
 			ClipsDescendants = true,
 			Name = "C"
 		}), {
-			MakeElement("List", 0, 4),
-			MakeElement("Padding", 4, 12, 12, 4)
+			SetProps(MakeElement("List", 0, 2), {Name = "List"}),
+			MakeElement("Padding", 4, 8, 8, 4)
 		})
 
-		local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-			Size = UDim2.new(1, 0, 0, 38),
-			Parent = ItemParent
+		local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+			Size = UDim2.new(1, 0, 0, 32),
+			Parent = ItemParent,
+			ClipsDescendants = true
 		}), {
 			SetProps(SetChildren(MakeElement("TFrame"), {
-				AddThemeObject(SetProps(MakeElement("Label", Config.Name, 14), {
+				AddThemeObject(SetProps(MakeElement("Label", Config.Name, 13), {
 					Size = UDim2.new(1, -12, 1, 0),
 					Position = UDim2.new(0, 12, 0, 0),
 					Font = Enum.Font.GothamSemibold,
@@ -973,7 +974,7 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 					Visible = false
 				}), "Stroke"), 
 			}), {
-				Size = UDim2.new(1, 0, 0, 38),
+				Size = UDim2.new(1, 0, 0, 32),
 				ClipsDescendants = true,
 				Name = "F"
 			}),
@@ -988,13 +989,13 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 
 			for _, v in next, Dropdown.Options do
 				local Option = SetChildren(SetProps(MakeElement("Button"), {
-					Size = UDim2.new(1, 0, 0, 26),
+					Size = UDim2.new(1, 0, 0, 24),
 					BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Divider,
 					BackgroundTransparency = 0,
 					Parent = DropdownContainer
 				}), {
 					MakeElement("Corner", 0, 4),
-					AddThemeObject(SetProps(MakeElement("Label", v, 12), {
+					AddThemeObject(SetProps(MakeElement("Label", v, 11), {
 						Size = UDim2.new(1, 0, 1, 0),
 						Font = Enum.Font.GothamSemibold,
 						TextXAlignment = Enum.TextXAlignment.Center
@@ -1006,17 +1007,22 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 					DropdownBox.Val.Text = v
 					task.spawn(Config.Callback, v)
 					Dropdown.Toggled = false
-					TweenService:Create(DropdownFrame, TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 38)}):Play()
+					TweenService:Create(DropdownFrame, TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32)}):Play()
 					DropdownContainer.Visible = false
 					DropdownFrame.F.Line.Visible = false
 				end)
 			end
 		end
 
+		AddConnection(DropdownContainer.List:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+			DropdownContainer.Size = UDim2.new(1, 0, 0, DropdownContainer.List.AbsoluteContentSize.Y + 8)
+		end)
+
 		AddConnection(Click.MouseButton1Click, function()
 			Dropdown.Toggled = not Dropdown.Toggled
 			UpdateDropdown()
-			TweenService:Create(DropdownFrame, TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownContainer.UIListLayout.AbsoluteContentSize.Y + 48) or UDim2.new(1, 0, 0, 38)}):Play()
+			local TargetSize = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownContainer.List.AbsoluteContentSize.Y + 40) or UDim2.new(1, 0, 0, 32)
+			TweenService:Create(DropdownFrame, TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = TargetSize}):Play()
 			DropdownContainer.Visible = Dropdown.Toggled
 			DropdownFrame.F.Line.Visible = Dropdown.Toggled
 		end)
@@ -1426,7 +1432,7 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+	local WindowStuff = SetChildren(SetProps(MakeElement("TFrame"), {
 		Size = UDim2.new(0, 150, 1, -42),
 		Position = UDim2.new(0, 0, 0, 42)
 	}), {
@@ -1436,7 +1442,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	}), "Main")
+	})
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
@@ -1813,6 +1819,7 @@ function OrionLib:MakeWindow(Config)
 
 		local ThemeList = {}
 		for i, v in pairs(OrionLib.Themes) do table.insert(ThemeList, i) end
+		table.sort(ThemeList)
 
 		TabReturn:AddDropdown({
 			Name = "Select Theme",
