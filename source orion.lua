@@ -12,13 +12,22 @@ local OrionLib = {
 	Flags = {},
 	Themes = {
 		Default = {
-			Main = Color3.fromRGB(15, 15, 17),
-			Second = Color3.fromRGB(22, 22, 25),
-			Stroke = Color3.fromRGB(45, 20, 20),
-			Divider = Color3.fromRGB(35, 15, 15),
+			Main = Color3.fromRGB(24, 24, 26),
+			Second = Color3.fromRGB(32, 32, 35),
+			Stroke = Color3.fromRGB(45, 45, 48),
+			Divider = Color3.fromRGB(40, 40, 42),
 			Text = Color3.fromRGB(255, 255, 255),
-			TextDark = Color3.fromRGB(180, 160, 160),
-			Accent = Color3.fromRGB(180, 0, 0)
+			TextDark = Color3.fromRGB(150, 150, 155),
+			Accent = Color3.fromRGB(110, 100, 255)
+		},
+		Light = {
+			Main = Color3.fromRGB(245, 245, 250),
+			Second = Color3.fromRGB(230, 230, 235),
+			Stroke = Color3.fromRGB(210, 210, 215),
+			Divider = Color3.fromRGB(220, 220, 225),
+			Text = Color3.fromRGB(30, 30, 35),
+			TextDark = Color3.fromRGB(100, 100, 110),
+			Accent = Color3.fromRGB(110, 100, 255)
 		},
 		BloodMoon = {
 			Main = Color3.fromRGB(12, 10, 10),
@@ -73,6 +82,42 @@ local OrionLib = {
 			Text = Color3.fromRGB(255, 255, 255),
 			TextDark = Color3.fromRGB(200, 200, 160),
 			Accent = Color3.fromRGB(255, 200, 0)
+		},
+		Cyber = {
+			Main = Color3.fromRGB(5, 5, 8),
+			Second = Color3.fromRGB(12, 12, 18),
+			Stroke = Color3.fromRGB(30, 30, 45),
+			Divider = Color3.fromRGB(20, 20, 30),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(120, 120, 150),
+			Accent = Color3.fromRGB(255, 0, 255)
+		},
+		Amber = {
+			Main = Color3.fromRGB(20, 18, 15),
+			Second = Color3.fromRGB(28, 25, 20),
+			Stroke = Color3.fromRGB(45, 40, 35),
+			Divider = Color3.fromRGB(35, 30, 25),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(180, 160, 140),
+			Accent = Color3.fromRGB(255, 180, 0)
+		},
+		Frost = {
+			Main = Color3.fromRGB(20, 25, 30),
+			Second = Color3.fromRGB(30, 35, 45),
+			Stroke = Color3.fromRGB(50, 60, 75),
+			Divider = Color3.fromRGB(40, 50, 65),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(160, 180, 200),
+			Accent = Color3.fromRGB(150, 220, 255)
+		},
+		Rose = {
+			Main = Color3.fromRGB(25, 20, 22),
+			Second = Color3.fromRGB(35, 25, 30),
+			Stroke = Color3.fromRGB(55, 40, 45),
+			Divider = Color3.fromRGB(45, 30, 35),
+			Text = Color3.fromRGB(255, 255, 255),
+			TextDark = Color3.fromRGB(180, 150, 160),
+			Accent = Color3.fromRGB(255, 120, 180)
 		}
 	},
 	SelectedTheme = "Default",
@@ -1299,20 +1344,21 @@ function OrionLib:MakeWindow(Config)
 		end	
 	end
 
-	local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 0), {
+	local TabHolder = SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 0), {
 		Size = UDim2.new(1, 0, 1, -42),
 		Position = UDim2.new(0, 0, 0, 42),
 		CanvasSize = UDim2.new(0, 0, 0, 0),
-		ScrollBarThickness = 0
+		ScrollBarThickness = 0,
+		BackgroundTransparency = 1
 	}), {
 		SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 8)}),
 		MakeElement("Padding", 10, 8, 8, 10)
-	}), "Divider")
+	})
 
 	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
 		Size = UDim2.new(1, -16, 0, 28),
 		Position = UDim2.new(0, 8, 0, 8),
-		BackgroundTransparency = 0.6
+		BackgroundTransparency = 0.8
 	}), {
 		AddThemeObject(MakeElement("Stroke"), "Stroke"),
 		AddThemeObject(SetProps(Create("TextBox", {
@@ -1379,7 +1425,7 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+	local WindowStuff = SetChildren(SetProps(MakeElement("TFrame"), {
 		Size = UDim2.new(0, 150, 1, -42),
 		Position = UDim2.new(0, 0, 0, 42)
 	}), {
@@ -1389,7 +1435,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	}), "Main")
+	})
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
