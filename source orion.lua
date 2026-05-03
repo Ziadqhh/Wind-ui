@@ -1358,12 +1358,12 @@ function OrionLib:MakeWindow(Config)
 		ScrollBarThickness = 0,
 		BackgroundTransparency = 1
 	}), {
-		SetProps(MakeElement("List"), {FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 8)}),
-		MakeElement("Padding", 10, 8, 8, 10)
+		SetProps(MakeElement("List", 0, 6), {FillDirection = Enum.FillDirection.Vertical}),
+		MakeElement("Padding", 8, 8, 8, 8)
 	})
 
-	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
-		Size = UDim2.new(1, -16, 0, 28),
+	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 6), {
+		Size = UDim2.new(1, -16, 0, 26),
 		Position = UDim2.new(0, 8, 0, 8),
 		BackgroundTransparency = 0.5
 	}), {
@@ -1391,7 +1391,7 @@ function OrionLib:MakeWindow(Config)
 	end)
 
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-		TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 20)
+		TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
 	end)
 
 	local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
