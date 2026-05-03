@@ -990,6 +990,7 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 				local Option = SetChildren(SetProps(MakeElement("Button"), {
 					Size = UDim2.new(1, 0, 0, 26),
 					BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Divider,
+					BackgroundTransparency = 0,
 					Parent = DropdownContainer
 				}), {
 					MakeElement("Corner", 0, 4),
@@ -1358,7 +1359,7 @@ function OrionLib:MakeWindow(Config)
 	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
 		Size = UDim2.new(1, -16, 0, 28),
 		Position = UDim2.new(0, 8, 0, 8),
-		BackgroundTransparency = 0.8
+		BackgroundTransparency = 0.5
 	}), {
 		AddThemeObject(MakeElement("Stroke"), "Stroke"),
 		AddThemeObject(SetProps(Create("TextBox", {
@@ -1372,7 +1373,7 @@ function OrionLib:MakeWindow(Config)
 			ClearTextOnFocus = false,
 			Name = "Box"
 		}), {}), "Text")
-	}), "Main")
+	}), "Second")
 
 	AddConnection(TabSearch.Box:GetPropertyChangedSignal("Text"), function()
 		local Query = TabSearch.Box.Text:lower()
@@ -1425,7 +1426,7 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = SetChildren(SetProps(MakeElement("TFrame"), {
+	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
 		Size = UDim2.new(0, 150, 1, -42),
 		Position = UDim2.new(0, 0, 0, 42)
 	}), {
@@ -1435,7 +1436,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	})
+	}), "Main")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
