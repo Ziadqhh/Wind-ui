@@ -1891,23 +1891,40 @@ function OrionLib:MakeWindow(Config)
 		end)
 
 		AddConnection(TabFrame.MouseButton1Up, function()
+			if not MainWindow or not Container then return end
+			
 			for _, Tab in next, TabHolder:GetChildren() do
 				if Tab:IsA("TextButton") and Tab:FindFirstChild("Title") then
 					TweenService:Create(Tab, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-					TweenService:Create(Tab.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 0)}):Play()
-					TweenService:Create(Tab.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
+					if Tab:FindFirstChild("Indicator") then
+						TweenService:Create(Tab.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 0)}):Play()
+					end
+					if Tab:FindFirstChild("Ico") then
+						TweenService:Create(Tab.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
+					end
 					TweenService:Create(Tab.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
 					Tab.Title.Font = Enum.Font.GothamSemibold
 				end    
 			end
+			
 			for _, Child in next, MainWindow:GetChildren() do
-				if Child.Name == "ItemContainer" then Child.Visible = false end    
-			end  
+				if Child:IsA("ScrollingFrame") and Child.Name == "ItemContainer" then 
+					Child.Visible = false 
+				end    
+			end
+			
 			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)}):Play()
-			TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 18)}):Play()
-			TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
-			TweenService:Create(TabFrame.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-			TabFrame.Title.Font = Enum.Font.GothamBlack
+			if TabFrame:FindFirstChild("Indicator") then
+				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 18)}):Play()
+			end
+			if TabFrame:FindFirstChild("Ico") then
+				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
+			end
+			if TabFrame:FindFirstChild("Title") then
+				TweenService:Create(TabFrame.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+				TabFrame.Title.Font = Enum.Font.GothamBlack
+			end
+			
 			Container.Visible = true
 		end)
 
