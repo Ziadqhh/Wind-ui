@@ -1432,9 +1432,10 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = SetChildren(SetProps(MakeElement("TFrame"), {
+	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
 		Size = UDim2.new(0, 150, 1, -42),
-		Position = UDim2.new(0, 0, 0, 42)
+		Position = UDim2.new(0, 0, 0, 42),
+		BackgroundTransparency = 0 -- Explicitly solid to control color
 	}), {
 		TabSearch,
 		TabHolder,
@@ -1442,7 +1443,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	})
+	}), "Main")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
