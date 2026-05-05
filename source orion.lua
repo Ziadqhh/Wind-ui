@@ -1336,6 +1336,7 @@ local function GetElements(ItemParent, MainWindow, WindowStuff, SettingsOverlay,
 end
 
 function OrionLib:MakeWindow(Config)
+	local CurrentTabContainer = nil
 	Config = Config or {}
 	Config.Name = Config.Name or "Orion Library"
 	Config.ConfigFolder = Config.ConfigFolder or Config.Name
