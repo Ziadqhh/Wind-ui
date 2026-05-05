@@ -1359,19 +1359,20 @@ function OrionLib:MakeWindow(Config)
 	end
 
 	local TabHolder = SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 0), {
-		Size = UDim2.new(1, 0, 1, -42),
-		Position = UDim2.new(0, 0, 0, 42),
+		Size = UDim2.new(1, -160, 1, 0),
+		Position = UDim2.new(0, 0, 0, 0),
 		CanvasSize = UDim2.new(0, 0, 0, 0),
 		ScrollBarThickness = 0,
 		BackgroundTransparency = 1
 	}), {
-		SetProps(MakeElement("List", 0, 6), {FillDirection = Enum.FillDirection.Vertical}),
-		MakeElement("Padding", 8, 8, 8, 8)
+		SetProps(MakeElement("List", 0, 6), {FillDirection = Enum.FillDirection.Horizontal}),
+		MakeElement("Padding", 4, 8, 8, 4)
 	})
 
 	local TabSearch = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 6), {
-		Size = UDim2.new(1, -16, 0, 26),
-		Position = UDim2.new(0, 8, 0, 8),
+		Size = UDim2.new(0, 140, 0, 24),
+		Position = UDim2.new(1, -8, 0.5, 0),
+		AnchorPoint = Vector2.new(1, 0.5),
 		BackgroundTransparency = 0.5
 	}), {
 		AddThemeObject(MakeElement("Stroke"), "Stroke"),
@@ -1382,7 +1383,7 @@ function OrionLib:MakeWindow(Config)
 			Text = "",
 			PlaceholderText = "Search...",
 			Font = Enum.Font.Gotham,
-			TextSize = 12,
+			TextSize = 11,
 			ClearTextOnFocus = false,
 			Name = "Box"
 		}), {}), "Text")
@@ -1398,7 +1399,7 @@ function OrionLib:MakeWindow(Config)
 	end)
 
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-		TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
+		TabHolder.CanvasSize = UDim2.new(0, TabHolder.UIListLayout.AbsoluteContentSize.X + 16, 0, 0)
 	end)
 
 	local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
@@ -1439,19 +1440,17 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
-		Size = UDim2.new(0, 150, 1, 0),
-		Position = UDim2.new(0, 0, 0, 0),
-		BackgroundTransparency = 1 
+	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
+		Size = UDim2.new(1, 0, 0, 34),
+		Position = UDim2.new(0, 0, 0, 42)
 	}), {
-		MakeElement("Padding", 0, 0, 0, 42), -- Push content below topbar
 		TabSearch,
 		TabHolder,
 		AddThemeObject(SetProps(MakeElement("Frame"), {
-			Size = UDim2.new(0, 1, 1, 0),
-			Position = UDim2.new(1, -1, 0, 0)
+			Size = UDim2.new(1, 0, 0, 1),
+			Position = UDim2.new(0, 0, 1, -1)
 		}), "Stroke"),
-	})
+	}), "Second")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
@@ -1898,49 +1897,47 @@ function OrionLib:MakeWindow(Config)
 		Config.Icon = Config.Icon or ""
 
 		local TabFrame = AddThemeObject(SetChildren(SetProps(MakeElement("Button"), {
-			Size = UDim2.new(1, 0, 0, 32),
-			BackgroundTransparency = 1, -- Invisible by default
+			Size = UDim2.new(0, 0, 1, 0),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
 			Parent = TabHolder
 		}), {
 			MakeElement("Corner", 0, 4),
-			SetProps(MakeElement("Stroke", OrionLib.Themes[OrionLib.SelectedTheme].Accent, 1.5), {
-				Name = "Glow",
-				Transparency = 1 -- Fully transparent glow by default
-			}),
 			AddThemeObject(SetProps(MakeElement("Frame"), {
-				Size = UDim2.new(0, 3, 0, 0),
-				Position = UDim2.new(0, 2, 0.5, 0),
-				AnchorPoint = Vector2.new(0, 0.5),
+				Size = UDim2.new(1, 0, 0, 2),
+				Position = UDim2.new(0, 0, 1, -2),
 				Name = "Indicator",
-				BorderSizePixel = 0
+				BorderSizePixel = 0,
+				BackgroundTransparency = 1
 			}), "Accent"),
 			AddThemeObject(SetProps(MakeElement("Image", Config.Icon), {
 				AnchorPoint = Vector2.new(0, 0.5),
 				Size = UDim2.new(0, 16, 0, 16),
-				Position = UDim2.new(0, 10, 0.5, 0),
+				Position = UDim2.new(0, 12, 0.5, 0),
 				ImageTransparency = 0.4,
 				Name = "Ico"
 			}), "Text"),
-			AddThemeObject(SetProps(MakeElement("Label", Config.Name, 14), {
-				Size = UDim2.new(1, -32, 1, 0),
+			AddThemeObject(SetProps(MakeElement("Label", Config.Name, 13), {
+				Size = UDim2.new(0, 0, 1, 0),
+				AutomaticSize = Enum.AutomaticSize.X,
 				Position = UDim2.new(0, 32, 0, 0),
 				Font = Enum.Font.GothamSemibold,
 				TextTransparency = 0.4,
 				Name = "Title"
 			}), "Text"),
+			SetProps(MakeElement("Padding", 0, 0, 12, 0), {})
 		}), "Second")
 
-		local Container = SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
-			Size = UDim2.new(1, -150, 1, -42),
-			Position = UDim2.new(0, 150, 0, 42),
+		local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
+			Size = UDim2.new(1, 0, 1, -76),
+			Position = UDim2.new(0, 0, 0, 76),
 			Parent = MainWindow,
 			Visible = false,
-			BackgroundTransparency = 1,
 			Name = "ItemContainer"
 		}), {
 			MakeElement("List", 0, 6),
 			MakeElement("Padding", 15, 12, 12, 15)
-		})
+		}), "Main")
 		
 		AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
@@ -1949,14 +1946,14 @@ function OrionLib:MakeWindow(Config)
 		AddConnection(TabFrame.MouseEnter, function()
 			if not Container.Visible then
 				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.8, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
-				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 14)}):Play()
+				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.5}):Play()
 			end
 		end)
 
 		AddConnection(TabFrame.MouseLeave, function()
 			if not Container.Visible then
 				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
-				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 0)}):Play()
+				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
 			end
 		end)
 
@@ -1967,7 +1964,7 @@ function OrionLib:MakeWindow(Config)
 				if Tab:IsA("TextButton") and Tab:FindFirstChild("Title") then
 					TweenService:Create(Tab, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
 					if Tab:FindFirstChild("Indicator") then
-						TweenService:Create(Tab.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 0)}):Play()
+						TweenService:Create(Tab.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
 					end
 					if Tab:FindFirstChild("Ico") then
 						TweenService:Create(Tab.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
@@ -1983,9 +1980,9 @@ function OrionLib:MakeWindow(Config)
 				end    
 			end
 			
-			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.9, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 			if TabFrame:FindFirstChild("Indicator") then
-				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 18)}):Play()
+				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
 			end
 			if TabFrame:FindFirstChild("Ico") then
 				TweenService:Create(TabFrame.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
@@ -2001,14 +1998,18 @@ function OrionLib:MakeWindow(Config)
 
 		if FirstTab then
 			FirstTab = false
-			TabFrame.BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)
-			TabFrame.Indicator.Size = UDim2.new(0, 3, 0, 18)
+			TabFrame.BackgroundTransparency = 0.9
+			TabFrame.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second
+			TabFrame.Indicator.BackgroundTransparency = 0
 			TabFrame.Ico.ImageTransparency = 0
 			TabFrame.Title.TextTransparency = 0
 			TabFrame.Title.Font = Enum.Font.GothamBlack
 			Container.Visible = true
 			CurrentTabContainer = Container
 		end    
+
+		return GetElements(Container, MainWindow, WindowStuff, SettingsOverlay, ToggleSettings)
+	end    
 
 		return GetElements(Container, MainWindow, WindowStuff, SettingsOverlay, ToggleSettings)
 	end  
