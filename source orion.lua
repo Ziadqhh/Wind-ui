@@ -1442,7 +1442,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	}), "Second")
+	}), "Main")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
@@ -1922,7 +1922,7 @@ function OrionLib:MakeWindow(Config)
 		}), {
 			MakeElement("List", 0, 6),
 			MakeElement("Padding", 15, 12, 12, 15)
-		}), "Divider")
+		}), "Main")
 		
 		AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
