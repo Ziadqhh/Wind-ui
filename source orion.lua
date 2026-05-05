@@ -281,6 +281,7 @@ local function ReturnProperty(Object)
 	if Object:IsA("ImageLabel") or Object:IsA("ImageButton") then
 		return "ImageColor3"
 	end   
+	return nil
 end
 
 local function AddThemeObject(Object, Type)
@@ -288,14 +289,20 @@ local function AddThemeObject(Object, Type)
 		OrionLib.ThemeObjects[Type] = {}
 	end    
 	table.insert(OrionLib.ThemeObjects[Type], Object)
-	Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Type]
+	local Property = ReturnProperty(Object)
+	if Property then
+		Object[Property] = OrionLib.Themes[OrionLib.SelectedTheme][Type]
+	end
 	return Object
 end    
 
 local function SetTheme()
 	for Name, Type in pairs(OrionLib.ThemeObjects) do
 		for _, Object in pairs(Type) do
-			Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Name]
+			local Property = ReturnProperty(Object)
+			if Property and OrionLib.Themes[OrionLib.SelectedTheme][Name] then
+				Object[Property] = OrionLib.Themes[OrionLib.SelectedTheme][Name]
+			end
 		end    
 	end    
 end
@@ -1442,7 +1449,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	}), "Main")
+	}), "Second")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
