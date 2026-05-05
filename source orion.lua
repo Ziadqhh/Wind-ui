@@ -1628,11 +1628,19 @@ function OrionLib:MakeWindow(Config)
 			task.wait(0.5)
 			MainWindow.ClipsDescendants = false
 			WindowStuff.Visible = not SettingsOverlay.Visible
+			if not SettingsOverlay.Visible and CurrentTabContainer then
+				CurrentTabContainer.Visible = true
+			end
 		else
 			MainWindow.ClipsDescendants = true
 			MinimizeBtn.Ico.Image = "rbxassetid://7072720870"
 			WindowStuff.Visible = false
 			SettingsOverlay.Visible = false
+			for _, Child in next, MainWindow:GetChildren() do
+				if Child.Name == "ItemContainer" then
+					Child.Visible = false
+				end
+			end
 			Config.Size = MainWindow.Size
 			TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, MainWindow.Size.X.Offset, 0, 42)}):Play()
 		end
@@ -1985,6 +1993,7 @@ function OrionLib:MakeWindow(Config)
 			end
 			
 			Container.Visible = true
+			CurrentTabContainer = Container
 		end)
 
 		if FirstTab then
@@ -1995,6 +2004,7 @@ function OrionLib:MakeWindow(Config)
 			TabFrame.Title.TextTransparency = 0
 			TabFrame.Title.Font = Enum.Font.GothamBlack
 			Container.Visible = true
+			CurrentTabContainer = Container
 		end    
 
 		return GetElements(Container, MainWindow, WindowStuff, SettingsOverlay, ToggleSettings)
