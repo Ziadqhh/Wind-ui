@@ -1545,7 +1545,7 @@ function OrionLib:MakeWindow(Config)
 				MinimizeBtn,
 				SettingsTopBtn
 			}), "Main"), 
-		}), "Second"),
+		}), "Main"),
 		DragPoint,
 		WindowStuff,
 		SettingsOverlay
