@@ -1931,7 +1931,7 @@ function OrionLib:MakeWindow(Config)
 
 		AddConnection(TabFrame.MouseEnter, function()
 			if not Container.Visible then
-				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.8, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.95}):Play()
 				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 14)}):Play()
 			end
 		end)
@@ -1966,7 +1966,7 @@ function OrionLib:MakeWindow(Config)
 				end    
 			end
 			
-			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
+			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
 			if TabFrame:FindFirstChild("Indicator") then
 				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 18)}):Play()
 			end
@@ -1983,7 +1983,7 @@ function OrionLib:MakeWindow(Config)
 
 		if FirstTab then
 			FirstTab = false
-			TabFrame.BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)
+			TabFrame.BackgroundTransparency = 1
 			TabFrame.Indicator.Size = UDim2.new(0, 3, 0, 18)
 			TabFrame.Ico.ImageTransparency = 0
 			TabFrame.Title.TextTransparency = 0
