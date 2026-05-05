@@ -2009,9 +2009,6 @@ function OrionLib:MakeWindow(Config)
 		end    
 
 		return GetElements(Container, MainWindow, WindowStuff, SettingsOverlay, ToggleSettings)
-	end    
-
-		return GetElements(Container, MainWindow, WindowStuff, SettingsOverlay, ToggleSettings)
 	end  
 
 	return TabFunction
