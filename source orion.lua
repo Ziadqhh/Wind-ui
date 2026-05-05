@@ -1440,16 +1440,18 @@ function OrionLib:MakeWindow(Config)
 	})
 
 	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
-		Size = UDim2.new(0, 150, 1, -42),
-		Position = UDim2.new(0, 0, 0, 42)
+		Size = UDim2.new(0, 150, 1, 0),
+		Position = UDim2.new(0, 0, 0, 0),
+		BackgroundTransparency = 1 -- Make it transparent to use parent color
 	}), {
+		MakeElement("Padding", 0, 0, 0, 42), -- Push content below topbar
 		TabSearch,
 		TabHolder,
 		AddThemeObject(SetProps(MakeElement("Frame"), {
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	}), "Second")
+	}), "Main")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
