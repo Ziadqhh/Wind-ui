@@ -1374,7 +1374,7 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(0, 140, 0, 24),
 		Position = UDim2.new(1, -8, 0.5, 0),
 		AnchorPoint = Vector2.new(1, 0.5),
-		BackgroundTransparency = 0.5
+		BackgroundTransparency = 0.8
 	}), {
 		AddThemeObject(MakeElement("Stroke"), "Stroke"),
 		AddThemeObject(SetProps(Create("TextBox", {
@@ -1388,7 +1388,7 @@ function OrionLib:MakeWindow(Config)
 			ClearTextOnFocus = false,
 			Name = "Box"
 		}), {}), "Text")
-	}), "Second")
+	}), "Main")
 
 	AddConnection(TabSearch.Box:GetPropertyChangedSignal("Text"), function()
 		local Query = TabSearch.Box.Text:lower()
@@ -1405,7 +1405,8 @@ function OrionLib:MakeWindow(Config)
 
 	local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
 		Size = UDim2.new(0.333, 0, 1, 0),
-		Position = UDim2.new(0.666, 0, 0, 0)
+		Position = UDim2.new(0.666, 0, 0, 0),
+		BackgroundTransparency = 1
 	}), {
 		AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
 			Position = UDim2.new(0.5, 0, 0.5, 0),
@@ -1416,7 +1417,8 @@ function OrionLib:MakeWindow(Config)
 
 	local MinimizeBtn = SetChildren(SetProps(MakeElement("Button"), {
 		Size = UDim2.new(0.333, 0, 1, 0),
-		Position = UDim2.new(0.333, 0, 0, 0)
+		Position = UDim2.new(0.333, 0, 0, 0),
+		BackgroundTransparency = 1
 	}), {
 		AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072719338"), {
 			Position = UDim2.new(0.5, 0, 0.5, 0),
@@ -1427,7 +1429,8 @@ function OrionLib:MakeWindow(Config)
 	})
 
 	local SettingsTopBtn = SetChildren(SetProps(MakeElement("Button"), {
-		Size = UDim2.new(0.333, 0, 1, 0)
+		Size = UDim2.new(0.333, 0, 1, 0),
+		BackgroundTransparency = 1
 	}), {
 		AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://133220441796193"), {
 			Position = UDim2.new(0.5, 0, 0.5, 0),
@@ -1441,10 +1444,9 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
+	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 0, 34),
-		Position = UDim2.new(0, 0, 0, 42),
-		BackgroundTransparency = 1
+		Position = UDim2.new(0, 0, 0, 42)
 	}), {
 		TabSearch,
 		TabHolder,
@@ -1452,7 +1454,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(1, 0, 0, 1),
 			Position = UDim2.new(0, 0, 1, -1)
 		}), "Stroke"),
-	})
+	}), "Main")
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
