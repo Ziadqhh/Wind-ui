@@ -1439,10 +1439,10 @@ function OrionLib:MakeWindow(Config)
 		Size = UDim2.new(1, 0, 0, 50)
 	})
 
-	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
+	local WindowStuff = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 8), {
 		Size = UDim2.new(0, 150, 1, 0),
 		Position = UDim2.new(0, 0, 0, 0),
-		BackgroundTransparency = 1 -- Make it transparent to use parent color
+		BackgroundTransparency = 1 
 	}), {
 		MakeElement("Padding", 0, 0, 0, 42), -- Push content below topbar
 		TabSearch,
@@ -1451,7 +1451,7 @@ function OrionLib:MakeWindow(Config)
 			Size = UDim2.new(0, 1, 1, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"),
-	}), "Main")
+	})
 
 	local SettingsOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Size = UDim2.new(1, 0, 1, -42),
@@ -1930,16 +1930,17 @@ function OrionLib:MakeWindow(Config)
 			}), "Text"),
 		}), "Second")
 
-		local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
+		local Container = SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
 			Size = UDim2.new(1, -150, 1, -42),
 			Position = UDim2.new(0, 150, 0, 42),
 			Parent = MainWindow,
 			Visible = false,
+			BackgroundTransparency = 1,
 			Name = "ItemContainer"
 		}), {
 			MakeElement("List", 0, 6),
 			MakeElement("Padding", 15, 12, 12, 15)
-		}), "Main")
+		})
 		
 		AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
