@@ -1435,7 +1435,7 @@ function OrionLib:MakeWindow(Config)
 	local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
 		Size = UDim2.new(0, 150, 1, -42),
 		Position = UDim2.new(0, 0, 0, 42),
-		BackgroundTransparency = 0 -- Explicitly solid to control color
+		BackgroundTransparency = 1 
 	}), {
 		TabSearch,
 		TabHolder,
@@ -1919,6 +1919,7 @@ function OrionLib:MakeWindow(Config)
 			Position = UDim2.new(0, 150, 0, 42),
 			Parent = MainWindow,
 			Visible = false,
+			BackgroundTransparency = 1,
 			Name = "ItemContainer"
 		}), {
 			MakeElement("List", 0, 6),
@@ -1931,7 +1932,7 @@ function OrionLib:MakeWindow(Config)
 
 		AddConnection(TabFrame.MouseEnter, function()
 			if not Container.Visible then
-				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.95}):Play()
+				TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.8, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 14)}):Play()
 			end
 		end)
@@ -1966,7 +1967,7 @@ function OrionLib:MakeWindow(Config)
 				end    
 			end
 			
-			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
+			TweenService:Create(TabFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0, BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 			if TabFrame:FindFirstChild("Indicator") then
 				TweenService:Create(TabFrame.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 3, 0, 18)}):Play()
 			end
@@ -1983,7 +1984,7 @@ function OrionLib:MakeWindow(Config)
 
 		if FirstTab then
 			FirstTab = false
-			TabFrame.BackgroundTransparency = 1
+			TabFrame.BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 10, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 10)
 			TabFrame.Indicator.Size = UDim2.new(0, 3, 0, 18)
 			TabFrame.Ico.ImageTransparency = 0
 			TabFrame.Title.TextTransparency = 0
