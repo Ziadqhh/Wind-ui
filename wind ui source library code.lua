@@ -10282,17 +10282,17 @@ am.TabCount=am.TabCount+1
 local aq=am.TabCount
 ap.Index=aq
 
-ap.UIElements.Main=ah.NewRoundFrame(ap.UICorner-4,"Squircle",{
+ap.UIElements.Main=ah.NewRoundFrame(8,"Squircle",{
 BackgroundTransparency=1,
-Size=UDim2.new(1,-12,0,42),
-AutomaticSize="None",
+Size=UDim2.new(0,0,1,-8),
+AutomaticSize="X",
 Parent=an.Parent,
 ThemeTag={
 ImageColor3="TabBackground",
 },
 ImageTransparency=1,
 },{
-ah.NewRoundFrame(ap.UICorner-4,"Glass-1.4",{
+ah.NewRoundFrame(8,"Glass-1.4",{
 Size=UDim2.new(1,0,1,0),
 ThemeTag={
 ImageColor3="Accent",
@@ -10301,9 +10301,9 @@ ImageTransparency=1,
 Name="Outline",
 }),
 aj("Frame",{
-Size=UDim2.new(0,4,0,18),
-Position=UDim2.new(0,2,0.5,0),
-AnchorPoint=Vector2.new(0,0.5),
+Size=UDim2.new(0,18,0,3),
+Position=UDim2.new(0.5,0,1,0),
+AnchorPoint=Vector2.new(0.5,1),
 ThemeTag={
 BackgroundColor3="Accent",
 },
@@ -10312,7 +10312,7 @@ Name="Indicator",
 },{
 aj("UICorner",{CornerRadius=UDim.new(1,0)}),
 }),
-ah.NewRoundFrame(ap.UICorner-4,"Squircle",{
+ah.NewRoundFrame(8,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ThemeTag={
 ImageColor3="Text",
@@ -10322,7 +10322,7 @@ Name="Frame",
 },{
 aj("UIListLayout",{
 SortOrder="LayoutOrder",
-Padding=UDim.new(0,10),
+Padding=UDim.new(0,8),
 FillDirection="Horizontal",
 VerticalAlignment="Center",
 }),
@@ -10332,28 +10332,24 @@ ThemeTag={
 TextColor3="TabTitle",
 },
 TextTransparency=0.4,
-TextSize=15,
-Size=UDim2.new(1,-30,0,0),
+TextSize=14,
+Size=UDim2.new(0,0,1,0),
 FontFace=Font.new(ah.Font,Enum.FontWeight.SemiBold),
-TextWrapped=true,
-RichText=true,
-AutomaticSize="Y",
+AutomaticSize="X",
 LayoutOrder=2,
 TextXAlignment="Left",
 BackgroundTransparency=1,
 }),
 aj("UIPadding",{
-PaddingLeft=UDim.new(0,14),
-PaddingRight=UDim.new(0,8),
+PaddingLeft=UDim.new(0,12),
+PaddingRight=UDim.new(0,12),
 }),
 }),
-},true)
+	local ar=0
+	local as
+	local at
 
-local ar=0
-local as
-local at
-
-if ap.Icon then
+	if ap.Icon then
 as=ah.Image(
 ap.Icon,
 ap.Icon..":"..ap.Title,
@@ -11736,78 +11732,48 @@ Active=false,
 
 
 au.UIElements.SideBar=am("ScrollingFrame",{
-Size=UDim2.new(
-1,
-au.ScrollBarEnabled and-3-(au.UIPadding/2)or 0,
-1,
-not au.HideSearchBar and-45 or 0
-),
-Position=UDim2.new(0,0,1,0),
-AnchorPoint=Vector2.new(0,1),
+Size=UDim2.new(1,0,1,0),
+Position=UDim2.new(0,0,0,0),
 BackgroundTransparency=1,
 ScrollBarThickness=0,
 ElasticBehavior="Never",
 CanvasSize=UDim2.new(0,0,0,0),
-AutomaticCanvasSize="Y",
-ScrollingDirection="Y",
+AutomaticCanvasSize="X",
+ScrollingDirection="X",
 ClipsDescendants=true,
-VerticalScrollBarPosition="Left",
 },{
 am("Frame",{
 BackgroundTransparency=1,
-AutomaticSize="Y",
-Size=UDim2.new(1,0,0,0),
+AutomaticSize="X",
+Size=UDim2.new(0,0,1,0),
 Name="Frame",
 },{
 am("UIPadding",{
-
-
-
-PaddingBottom=UDim.new(0,au.UIPadding/2),
+PaddingLeft=UDim.new(0,12),
+PaddingRight=UDim.new(0,12),
 }),
 am("UIListLayout",{
 SortOrder="LayoutOrder",
-Padding=UDim.new(0,au.Gap),
+Padding=UDim.new(0,12),
+FillDirection="Horizontal",
+VerticalAlignment="Center",
 }),
 }),
-am("UIPadding",{
-
-PaddingLeft=UDim.new(0,au.UIPadding/2),
-PaddingRight=UDim.new(0,au.UIPadding/2),
-
-}),
-
 })
 
 au.UIElements.SideBarContainer=am("Frame",{
-Size=UDim2.new(
-0,
-au.SideBarWidth,
-1,
-au.User.Enabled and-au.Topbar.Height-42-(au.UIPadding*2)or-au.Topbar.Height
-),
+Size=UDim2.new(1,0,0,44),
 Position=UDim2.new(0,0,0,au.Topbar.Height),
 BackgroundTransparency=1,
 Visible=true,
 },{
-am("Frame",{
-Name="Content",
-BackgroundTransparency=1,
-Size=UDim2.new(1,0,1,not au.HideSearchBar and-45-au.UIPadding/2 or 0),
-Position=UDim2.new(0,0,1,0),
-AnchorPoint=Vector2.new(0,1),
-}),
 au.UIElements.SideBar,
 })
 
-if au.ScrollBarEnabled then
-aq(au.UIElements.SideBar,au.UIElements.SideBarContainer.Content,au,3)
-end
-
 au.UIElements.MainBar=am("Frame",{
-Size=UDim2.new(1,-au.UIElements.SideBarContainer.AbsoluteSize.X-10,1,-au.Topbar.Height-10),
-Position=UDim2.new(1,-5,1,-5),
-AnchorPoint=Vector2.new(1,1),
+Size=UDim2.new(1,-20,1,-au.Topbar.Height-44-10),
+Position=UDim2.new(0.5,0,1,-5),
+AnchorPoint=Vector2.new(0.5,1),
 BackgroundTransparency=1,
 },{
 al.NewRoundFrame(au.UICorner-6,"Squircle",{
@@ -11821,9 +11787,9 @@ Name="Background",
 Visible=not au.HidePanelBackground,
 }),
 am("UIPadding",{
-PaddingLeft=UDim.new(0,8),
-PaddingRight=UDim.new(0,8),
-PaddingBottom=UDim.new(0,8),
+PaddingLeft=UDim.new(0,10),
+PaddingRight=UDim.new(0,10),
+PaddingBottom=UDim.new(0,10),
 }),
 })
 
