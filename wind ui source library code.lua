@@ -10403,6 +10403,10 @@ function am.New(an,ao)
 	return ap
 end
 
+function am.OnChange(an,ao)
+	am.OnChangeFunc=ao
+end
+
 function am.SelectTab(an,ao)
 	if not am.Tabs[ao].Locked then
 		am.SelectedTab=ao
